@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Gallery Creator - Professional Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0078d4;
+            --dark-blue: #106ebe;
+            --light-blue: #deecf9;
+            --gray-100: #faf9f8;
+            --gray-200: #edebe9;
+            --gray-300: #e1dfdd;
+            --gray-500: #8a8886;
+            --gray-700: #323130;
+            --gray-900: #201f1e;
+            --white: #ffffff;
+            --green: #107c10;
+            --red: #d13438;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--gray-100) 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Enhanced Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-200);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
+        }
+
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            animation: slideInDown 0.6s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--dark-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+
+        .logo-icon:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .logo h1 {
+            color: var(--gray-900);
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--gray-900), var(--primary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: var(--gray-500);
+            animation: fadeInRight 0.8s ease-out;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .stats strong {
+            color: var(--primary-blue);
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .stats strong:hover {
+            transform: scale(1.1);
+            text-shadow: 0 2px 4px rgba(0, 120, 212, 0.3);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .control-panel {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            border: 1px solid var(--gray-200);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .control-panel:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .panel-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .panel-section::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-blue), var(--dark-blue));
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .panel-section:hover::before {
+            opacity: 1;
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            padding-left: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 2px;
+            height: 20px;
+            background: var(--primary-blue);
+            transform: translateY(-50%);
+            border-radius: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease-out backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .form-group label::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+
+        .form-group:focus-within label {
+            color: var(--primary-blue);
+        }
+
+        .form-group:focus-within label::after {
+            width: 100%;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+            position: relative;
+            font-family: inherit;
+        }
+
+        .form-control::placeholder {
+            color: var(--gray-500);
+            transition: color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-control:focus::placeholder {
+            color: var(--primary-blue);
+            opacity: 0.8;
+        }
+
+        .form-control:hover {
+            border-color: var(--dark-blue);
+        }
+
+        /* Enhanced Input Effects */
+        .form-control:valid {
+            border-color: var(--green);
+        }
+
+        .form-control:invalid:not(:placeholder-shown) {
+            border-color: var(--red);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .color-input {
+            width: 100%;
+            height: 50px;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-input::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, red, orange, yellow, green, cyan, blue, magenta, red);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .color-input:hover {
+            border-color: var(--primary-blue);
+            transform: scale(1.02);
+        }
+
+        .color-input:hover::before {
+            opacity: 0.1;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--dark-blue), #0e5a94);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+            color: var(--gray-900);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--green), #0e6e0e);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(16, 124, 16, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #0e6e0e, #0c5a0c);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 124, 16, 0.4);
+        }
+
+        /* Pulse effect for primary buttons */
+        .btn-primary {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3); }
+            50% { box-shadow: 0 4px 20px rgba(0, 120, 212, 0.5); }
+            100% { box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3); }
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn:disabled:hover::before {
+            width: 0;
+            height: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        .gallery {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            border: 1px solid var(--gray-200);
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-200);
+            position: relative;
+        }
+
+        .gallery-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
+        }
+
+        .gallery-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            background: linear-gradient(135deg, var(--gray-900), var(--primary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .layout-options {
+            display: flex;
+            gap: 0.5rem;
+            padding: 4px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .layout-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            color: var(--gray-500);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .layout-btn:hover::before {
+            opacity: 0.1;
+        }
+
+        .layout-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+            transform: scale(1.05);
+        }
+
+        .layout-btn.active::before {
+            opacity: 0;
+        }
+
+        .layout-btn:hover {
+            color: var(--primary-blue);
+            transform: scale(1.1);
+        }
+
+        .qr-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .qr-grid.layout-list {
+            grid-template-columns: 1fr;
+        }
+
+        .qr-grid.layout-compact {
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .qr-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-blue);
+        }
+
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
+        }
+
+        .qr-code {
+            margin: 0 auto 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-info {
+            text-align: left;
+        }
+
+        .qr-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .qr-url {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin-bottom: 1rem;
+        }
+
+        .qr-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-500);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .template-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .template-btn:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: var(--white);
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--green);
+        }
+
+        .notification.error {
+            background: var(--red);
+        }
+
+        .analytics {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--gray-100);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .control-panel {
+                position: static;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .stats {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .qr-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        .advanced-options {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-100);
+            border-radius: 8px;
+        }
+
+        .advanced-options.show {
+            display: block;
+        }
+
+        .toggle-advanced {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            margin-top: 0.5rem;
+        }
+        .qr-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .qr-grid.layout-list {
+            grid-template-columns: 1fr;
+        }
+
+        .qr-grid.layout-compact {
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .qr-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: cardSlideIn 0.6s ease-out backwards;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .qr-card:nth-child(1) { animation-delay: 0.1s; }
+        .qr-card:nth-child(2) { animation-delay: 0.2s; }
+        .qr-card:nth-child(3) { animation-delay: 0.3s; }
+        .qr-card:nth-child(4) { animation-delay: 0.4s; }
+        .qr-card:nth-child(5) { animation-delay: 0.5s; }
+        .qr-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .qr-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 120, 212, 0.02), rgba(16, 110, 190, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 16px;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-blue);
+        }
+
+        .qr-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .qr-card:hover::after {
+            opacity: 1;
+        }
+
+        .qr-code {
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .qr-card:hover .qr-code {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .qr-info {
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .qr-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .qr-card:hover .qr-title {
+            color: var(--primary-blue);
+        }
+
+        .qr-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+
+        .qr-card:hover .qr-title::after {
+            width: 100%;
+        }
+
+        .qr-url {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin-bottom: 1rem;
+            background: var(--gray-100);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .qr-card:hover .qr-url {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .qr-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .qr-card:hover .qr-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-sm::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .btn-sm:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-500);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .template-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+
+        .template-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 120, 212, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .template-btn:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.2);
+        }
+
+        .template-btn:hover::before {
+            left: 100%;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: var(--white);
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            animation: notificationPulse 0.5s ease-out;
+        }
+
+        @keyframes notificationPulse {
+            0% { transform: translateX(0) scale(0.8); }
+            50% { transform: translateX(0) scale(1.05); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, var(--green), #0e6e0e);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, var(--red), #b12a2a);
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            border-radius: inherit;
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        .analytics {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            grid-column: 1 / -1;
+            border: 1px solid var(--gray-200);
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--gray-100), var(--white));
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 120, 212, 0.15);
+            background: linear-gradient(135deg, var(--light-blue), var(--white));
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            animation: countUp 1s ease-out;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .stat-card:hover .stat-label {
+            color: var(--primary-blue);
+        }
+
+        /* Enhanced Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--gray-300), var(--primary-blue));
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 120, 212, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 120, 212, 0.3);
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-blue);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .advanced-options {
+            display: none;
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--gray-100), var(--white));
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            animation: expandDown 0.3s ease-out;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+                transform: translateY(0);
+            }
+        }
+
+        .advanced-options.show {
+            display: block;
+        }
+
+        .toggle-advanced {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .toggle-advanced:hover {
+            background: var(--light-blue);
+            transform: translateX(5px);
+        }
+
+        /* Improved Select Styling */
+        select.form-control {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%23666" d="M6 8L0 0h12z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px 8px;
+            padding-right: 40px;
+        }
+
+        /* Enhanced Focus States */
+        .form-control:focus,
+        .template-btn:focus,
+        .layout-btn:focus,
+        .btn:focus {
+            outline: 2px solid var(--primary-blue);
+            outline-offset: 2px;
+        }
+
+        /* Improved Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .control-panel {
+                position: static;
+                animation: fadeIn 0.6s ease-out;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .stats {
+                display: none;
+            }
+
+            .gallery {
+                animation: fadeIn 0.8s ease-out;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+
+            .qr-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --gray-100: #323130;
+                --gray-200: #605e5c;
+                --white: #292827;
+                --gray-900: #ffffff;
+                --gray-700: #e1dfdd;
+                --gray-500: #a19f9d;
+            }
+
+            body {
+                background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            }
+
+            .form-control,
+            .template-btn,
+            .stat-card {
+                background: var(--white);
+                color: var(--gray-700);
+            }
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-blue: #0066cc;
+                --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+            }
+
+            .btn-primary,
+            .btn-success {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">QR</div>
+                <h1>Professional QR Gallery Creator</h1>
+            </div>
+            <div class="stats">
+                <span>Total QR Codes: <strong id="totalCount">0</strong></span>
+                <span>Gallery Views: <strong id="viewCount">0</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="control-panel">
+            <!-- QR Code Generation Section -->
+            <div class="panel-section">
+                <h3 class="section-title">📱 Generate QR Code</h3>
+                
+                <div class="form-group">
+                    <label for="qrTitle">Title</label>
+                    <input type="text" id="qrTitle" class="form-control" placeholder="Enter QR code title">
+                </div>
+
+                <div class="form-group">
+                    <label for="qrUrl">URL/Content</label>
+                    <input type="url" id="qrUrl" class="form-control" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="qrSize">Size (px)</label>
+                    <input type="range" id="qrSize" class="form-control" min="100" max="400" value="200">
+                    <small id="sizeDisplay">200px</small>
+                </div>
+
+                <div class="template-grid">
+                    <button class="template-btn" onclick="loadTemplate('github')">GitHub</button>
+                    <button class="template-btn" onclick="loadTemplate('linkedin')">LinkedIn</button>
+                    <button class="template-btn" onclick="loadTemplate('portfolio')">Portfolio</button>
+                    <button class="template-btn" onclick="loadTemplate('resume')">Resume</button>
+                    <button class="template-btn" onclick="loadTemplate('contact')">Contact</button>
+                    <button class="template-btn" onclick="loadTemplate('website')">Website</button>
+                </div>
+
+                <button class="toggle-advanced" onclick="toggleAdvanced()">⚙️ Advanced Options</button>
+                
+                <div class="advanced-options" id="advancedOptions">
+                    <div class="form-group">
+                        <label for="qrForeground">Foreground Color</label>
+                        <input type="color" id="qrForeground" class="color-input" value="#000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qrBackground">Background Color</label>
+                        <input type="color" id="qrBackground" class="color-input" value="#ffffff">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qrLevel">Error Correction</label>
+                        <select id="qrLevel" class="form-control">
+                            <option value="L">Low (7%)</option>
+                            <option value="M" selected>Medium (15%)</option>
+                            <option value="Q">Quartile (25%)</option>
+                            <option value="H">High (30%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="generateQR()" style="width: 100%; margin-top: 1rem;">
+                    ➕ Generate QR Code
+                </button>
+            </div>
+
+            <!-- Gallery Actions Section -->
+            <div class="panel-section">
+                <h3 class="section-title">🎨 Gallery Actions</h3>
+                
+                <div class="btn-group" style="flex-direction: column; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="exportGallery()">
+                        📥 Export Gallery
+                    </button>
+                    <button class="btn btn-secondary" onclick="printGallery()">
+                        🖨️ Print Gallery
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearGallery()">
+                        🗑️ Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Import/Export Section -->
+            <div class="panel-section">
+                <h3 class="section-title">💾 Data Management</h3>
+                
+                <div class="form-group">
+                    <label for="galleryName">Gallery Name</label>
+                    <input type="text" id="galleryName" class="form-control" placeholder="My QR Gallery" value="Professional QR Gallery">
+                </div>
+
+                <div class="btn-group" style="flex-direction: column; gap: 0.5rem;">
+                    <button class="btn btn-success" onclick="saveGallery()">
+                        💾 Save Gallery
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importGallery(event)">
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+                        📂 Import Gallery
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <div class="gallery-header">
+                <h2 class="gallery-title">QR Code Gallery</h2>
+                <div class="layout-options">
+                    <button class="layout-btn active" onclick="setLayout('grid')" title="Grid Layout">
+                        ⚏
+                    </button>
+                    <button class="layout-btn" onclick="setLayout('list')" title="List Layout">
+                        ☰
+                    </button>
+                    <button class="layout-btn" onclick="setLayout('compact')" title="Compact Layout">
+                        ⚏⚏
+                    </button>
+                </div>
+            </div>
+
+            <div id="qrContainer" class="qr-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">📱</div>
+                    <h3>No QR Codes Yet</h3>
+                    <p>Generate your first QR code using the panel on the left</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics">
+            <h3 class="section-title">📊 Gallery Analytics</h3>
+            <div class="analytics-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalQRs">0</div>
+                    <div class="stat-label">Total QR Codes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgSize">0</div>
+                    <div class="stat-label">Average Size (px)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="lastGenerated">Never</div>
+                    <div class="stat-label">Last Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="uniqueDomains">0</div>
+                    <div class="stat-label">Unique Domains</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State Management
+        class QRGalleryManager {
+            constructor() {
+                this.qrCodes = [];
+                this.currentLayout = 'grid';
+                this.analytics = {
+                    totalGenerated: 0,
+                    totalViews: 0,
+                    avgSize: 0,
+                    domains: new Set()
+                };
+                this.init();
+            }
+
+            init() {
+                this.loadFromStorage();
+                this.updateStats();
+                this.bindEvents();
+                this.incrementViewCount();
+            }
+
+            bindEvents() {
+                // Size slider
+                const sizeSlider = document.getElementById('qrSize');
+                sizeSlider.addEventListener('input', (e) => {
+                    document.getElementById('sizeDisplay').textContent = e.target.value + 'px';
+                });
+
+                // Real-time URL validation
+                const urlInput = document.getElementById('qrUrl');
+                urlInput.addEventListener('input', this.validateUrl);
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        generateQR();
+                    }
+                    if (e.ctrlKey && e.key === 's') {
+                        e.preventDefault();
+                        saveGallery();
+                    }
+                });
+            }
+
+            validateUrl(e) {
+                const url = e.target.value;
+                const isValid = this.isValidUrl(url);
+                e.target.style.borderColor = isValid || !url ? '#e1dfdd' : '#d13438';
+            }
+
+            isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            generateQR(title, url, size, foreground, background, level) {
+                if (!url) {
+                    this.showNotification('Please enter a valid URL', 'error');
+                    return;
+                }
+
+                try {
+                    const canvas = document.createElement('canvas');
+                    const qr = new QRious({
+                        element: canvas,
+                        value: url,
+                        size: parseInt(size),
+                        foreground: foreground,
+                        background: background,
+                        level: level
+                    });
+
+                    const qrData = {
+                        id: Date.now(),
+                        title: title || 'Untitled',
+                        url: url,
+                        size: parseInt(size),
+                        foreground: foreground,
+                        background: background,
+                        level: level,
+                        dataUrl: canvas.toDataURL(),
+                        timestamp: new Date().toISOString()
+                    };
+
+                    this.qrCodes.push(qrData);
+                    this.analytics.totalGenerated++;
+                    
+                    // Track unique domains
+                    try {
+                        const domain = new URL(url).hostname;
+                        this.analytics.domains.add(domain);
+                    } catch (e) {
+                        // Handle non-URL content
+                    }
+
+                    this.renderGallery();
+                    this.updateStats();
+                    this.saveToStorage();
+                    this.showNotification('QR Code generated successfully!', 'success');
+
+                } catch (error) {
+                    this.showNotification('Error generating QR code: ' + error.message, 'error');
+                }
+            }
+
+            renderGallery() {
+                const container = document.getElementById('qrContainer');
+                
+                if (this.qrCodes.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📱</div>
+                            <h3>No QR Codes Yet</h3>
+                            <p>Generate your first QR code using the panel on the left</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.qrCodes.map(qr => `
+                    <div class="qr-card" data-id="${qr.id}">
+                        <img src="${qr.dataUrl}" alt="${qr.title}" class="qr-code" width="${Math.min(qr.size, 200)}" height="${Math.min(qr.size, 200)}">
+                        <div class="qr-info">
+                            <h4 class="qr-title">${qr.title}</h4>
+                            <p class="qr-url">${qr.url}</p>
+                            <div class="qr-actions">
+                                <button class="btn btn-primary btn-sm" onclick="downloadQR('${qr.id}')">
+                                    💾 Download
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="copyToClipboard('${qr.url}')">
+                                    📋 Copy URL
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="deleteQR('${qr.id}')">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateStats() {
+                const totalSizes = this.qrCodes.reduce((sum, qr) => sum + qr.size, 0);
+                this.analytics.avgSize = this.qrCodes.length ? Math.round(totalSizes / this.qrCodes.length) : 0;
+
+                document.getElementById('totalCount').textContent = this.qrCodes.length;
+                document.getElementById('viewCount').textContent = this.analytics.totalViews;
+                document.getElementById('totalQRs').textContent = this.qrCodes.length;
+                document.getElementById('avgSize').textContent = this.analytics.avgSize;
+                document.getElementById('uniqueDomains').textContent = this.analytics.domains.size;
+                
+                const lastGenerated = this.qrCodes.length > 0 
+                    ? new Date(Math.max(...this.qrCodes.map(qr => new Date(qr.timestamp)))).toLocaleDateString()
+                    : 'Never';
+                document.getElementById('lastGenerated').textContent = lastGenerated;
+            }
+
+            setLayout(layout) {
+                this.currentLayout = layout;
+                const container = document.getElementById('qrContainer');
+                const buttons = document.querySelectorAll('.layout-btn');
+                
+                buttons.forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                container.className = `qr-grid layout-${layout}`;
+                this.saveToStorage();
+            }
+
+            downloadQR(id) {
+                const qr = this.qrCodes.find(q => q.id == id);
+                if (!qr) return;
+
+                const link = document.createElement('a');
+                link.download = `${qr.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qr.png`;
+                link.href = qr.dataUrl;
+                link.click();
+            }
+
+            copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    this.showNotification('URL copied to clipboard!', 'success');
+                });
+            }
+
+            deleteQR(id) {
+                if (confirm('Are you sure you want to delete this QR code?')) {
+                    this.qrCodes = this.qrCodes.filter(qr => qr.id != id);
+                    this.renderGallery();
+                    this.updateStats();
+                    this.saveToStorage();
+                    this.showNotification('QR code deleted', 'success');
+                }
+            }
+
+            clearGallery() {
+                if (confirm('Are you sure you want to clear all QR codes? This action cannot be undone.')) {
+                    this.qrCodes = [];
+                    this.analytics.domains.clear();
+                    this.renderGallery();
+                    this.updateStats();
+                    this.saveToStorage();
+                    this.showNotification('Gallery cleared', 'success');
+                }
+            }
+
+            exportGallery() {
+                if (this.qrCodes.length === 0) {
+                    this.showNotification('No QR codes to export', 'error');
+                    return;
+                }
+
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF();
+                    const galleryName = document.getElementById('galleryName').value || 'QR Gallery';
+                    
+                    // Title page
+                    pdf.setFontSize(20);
+                    pdf.text(galleryName, 20, 30);
+                    pdf.setFontSize(12);
+                    pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 45);
+                    pdf.text(`Total QR Codes: ${this.qrCodes.length}`, 20, 55);
+
+                    let yPos = 80;
+                    this.qrCodes.forEach((qr, index) => {
+                        if (yPos > 250) {
+                            pdf.addPage();
+                            yPos = 30;
+                        }
+
+                        // Add QR code image
+                        pdf.addImage(qr.dataUrl, 'PNG', 20, yPos, 60, 60);
+                        
+                        // Add details
+                        pdf.setFontSize(14);
+                        pdf.text(qr.title, 90, yPos + 15);
+                        pdf.setFontSize(10);
+                        pdf.text(qr.url, 90, yPos + 25, { maxWidth: 100 });
+                        pdf.text(`Size: ${qr.size}px`, 90, yPos + 35);
+                        pdf.text(`Generated: ${new Date(qr.timestamp).toLocaleDateString()}`, 90, yPos + 45);
+
+                        yPos += 80;
+                    });
+
+                    pdf.save(`${galleryName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_gallery.pdf`);
+                    this.showNotification('Gallery exported successfully!', 'success');
+                } catch (error) {
+                    this.showNotification('Export failed: ' + error.message, 'error');
+                }
+            }
+
+            printGallery() {
+                const printWindow = window.open('', '_blank');
+                const galleryName = document.getElementById('galleryName').value || 'QR Gallery';
+                
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${galleryName}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .header { text-align: center; margin-bottom: 30px; }
+                            .qr-item { 
+                                display: inline-block; 
+                                margin: 20px; 
+                                padding: 15px; 
+                                border: 1px solid #ddd;
+                                text-align: center;
+                                page-break-inside: avoid;
+                            }
+                            .qr-title { font-weight: bold; margin: 10px 0 5px 0; }
+                            .qr-url { font-size: 12px; color: #666; word-break: break-all; }
+                            @media print {
+                                .qr-item { margin: 10px; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>${galleryName}</h1>
+                            <p>Generated on ${new Date().toLocaleDateString()}</p>
+                            <p>Total QR Codes: ${this.qrCodes.length}</p>
+                        </div>
+                        ${this.qrCodes.map(qr => `
+                            <div class="qr-item">
+                                <img src="${qr.dataUrl}" alt="${qr.title}">
+                                <div class="qr-title">${qr.title}</div>
+                                <div class="qr-url">${qr.url}</div>
+                            </div>
+                        `).join('')}
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+                printWindow.print();
+            }
+
+            saveGallery() {
+                const galleryName = document.getElementById('galleryName').value || 'QR_Gallery';
+                const data = {
+                    name: galleryName,
+                    created: new Date().toISOString(),
+                    qrCodes: this.qrCodes,
+                    analytics: {
+                        ...this.analytics,
+                        domains: Array.from(this.analytics.domains)
+                    },
+                    layout: this.currentLayout
+                };
+
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${galleryName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+                link.click();
+                
+                this.showNotification('Gallery saved successfully!', 'success');
+            }
+
+            importGallery(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (data.qrCodes && Array.isArray(data.qrCodes)) {
+                            if (confirm(`Import ${data.qrCodes.length} QR codes? This will replace your current gallery.`)) {
+                                this.qrCodes = data.qrCodes;
+                                this.analytics.domains = new Set(data.analytics?.domains || []);
+                                this.currentLayout = data.layout || 'grid';
+                                
+                                document.getElementById('galleryName').value = data.name || 'Imported Gallery';
+                                
+                                this.renderGallery();
+                                this.updateStats();
+                                this.saveToStorage();
+                                this.showNotification(`Imported ${data.qrCodes.length} QR codes!`, 'success');
+                            }
+                        } else {
+                            throw new Error('Invalid gallery file format');
+                        }
+                    } catch (error) {
+                        this.showNotification('Import failed: ' + error.message, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            saveToStorage() {
+                const data = {
+                    qrCodes: this.qrCodes,
+                    analytics: {
+                        ...this.analytics,
+                        domains: Array.from(this.analytics.domains)
+                    },
+                    layout: this.currentLayout
+                };
+                localStorage.setItem('qrGalleryData', JSON.stringify(data));
+            }
+
+            loadFromStorage() {
+                try {
+                    const saved = localStorage.getItem('qrGalleryData');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        this.qrCodes = data.qrCodes || [];
+                        this.analytics = {
+                            ...this.analytics,
+                            ...data.analytics,
+                            domains: new Set(data.analytics?.domains || [])
+                        };
+                        this.currentLayout = data.layout || 'grid';
+                        
+                        // Set layout button active state
+                        setTimeout(() => {
+                            const container = document.getElementById('qrContainer');
+                            if (container) {
+                                container.className = `qr-grid layout-${this.currentLayout}`;
+                            }
+                            
+                            const buttons = document.querySelectorAll('.layout-btn');
+                            buttons.forEach((btn, index) => {
+                                btn.classList.remove('active');
+                                const layouts = ['grid', 'list', 'compact'];
+                                if (layouts[index] === this.currentLayout) {
+                                    btn.classList.add('active');
+                                }
+                            });
+                        }, 100);
+                    }
+                } catch (error) {
+                    console.error('Failed to load from storage:', error);
+                }
+            }
+
+            incrementViewCount() {
+                this.analytics.totalViews++;
+                this.updateStats();
+                this.saveToStorage();
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 3000);
+            }
+        }
+
+        // Initialize the application
+        const galleryManager = new QRGalleryManager();
+
+        // Template data for quick generation
+        const templates = {
+            github: {
+                title: 'GitHub Profile',
+                url: 'https://github.com/username',
+                placeholder: 'Enter your GitHub username URL'
+            },
+            linkedin: {
+                title: 'LinkedIn Profile',
+                url: 'https://linkedin.com/in/username',
+                placeholder: 'Enter your LinkedIn profile URL'
+            },
+            portfolio: {
+                title: 'Portfolio Website',
+                url: 'https://yourportfolio.com',
+                placeholder: 'Enter your portfolio website URL'
+            },
+            resume: {
+                title: 'Resume/CV',
+                url: 'https://drive.google.com/file/d/your-resume-id',
+                placeholder: 'Enter your resume URL (Google Drive, Dropbox, etc.)'
+            },
+            contact: {
+                title: 'Contact Information',
+                url: 'mailto:your.email@example.com',
+                placeholder: 'Enter mailto: link or contact page URL'
+            },
+            website: {
+                title: 'Personal Website',
+                url: 'https://yourwebsite.com',
+                placeholder: 'Enter your website URL'
+            }
+        };
+
+        // Global functions for UI interactions
+        function generateQR() {
+            const title = document.getElementById('qrTitle').value;
+            const url = document.getElementById('qrUrl').value;
+            const size = document.getElementById('qrSize').value;
+            const foreground = document.getElementById('qrForeground').value;
+            const background = document.getElementById('qrBackground').value;
+            const level = document.getElementById('qrLevel').value;
+
+            if (!url.trim()) {
+                galleryManager.showNotification('Please enter a URL or content', 'error');
+                return;
+            }
+
+            galleryManager.generateQR(title, url, size, foreground, background, level);
+            
+            // Clear form
+            document.getElementById('qrTitle').value = '';
+            document.getElementById('qrUrl').value = '';
+        }
+
+        function loadTemplate(templateKey) {
+            const template = templates[templateKey];
+            if (template) {
+                document.getElementById('qrTitle').value = template.title;
+                document.getElementById('qrUrl').value = template.url;
+                document.getElementById('qrUrl').placeholder = template.placeholder;
+                
+                // Focus on URL field for editing
+                document.getElementById('qrUrl').focus();
+                document.getElementById('qrUrl').select();
+            }
+        }
+
+        function toggleAdvanced() {
+            const options = document.getElementById('advancedOptions');
+            const button = event.target;
+            
+            options.classList.toggle('show');
+            button.textContent = options.classList.contains('show') 
+                ? '⚙️ Hide Advanced Options' 
+                : '⚙️ Advanced Options';
+        }
+
+        function setLayout(layout) {
+            galleryManager.setLayout(layout);
+        }
+
+        function downloadQR(id) {
+            galleryManager.downloadQR(id);
+        }
+
+        function copyToClipboard(text) {
+            galleryManager.copyToClipboard(text);
+        }
+
+        function deleteQR(id) {
+            galleryManager.deleteQR(id);
+        }
+
+        function exportGallery() {
+            galleryManager.exportGallery();
+        }
+
+        function printGallery() {
+            galleryManager.printGallery();
+        }
+
+        function clearGallery() {
+            galleryManager.clearGallery();
+        }
+
+        function saveGallery() {
+            galleryManager.saveGallery();
+        }
+
+        function importGallery(event) {
+            galleryManager.importGallery(event);
+        }
+
+        // Initialize gallery rendering
+        document.addEventListener('DOMContentLoaded', () => {
+            galleryManager.renderGallery();
+        });
+    </script>
+</body>
+</html>
