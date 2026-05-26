@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Gallery Pro - Professional QR Code Gallery Creator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .panel {
+            background: var(--bg-primary);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .panel h2 {
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .color-input-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .color-input {
+            width: 50px;
+            height: 45px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .qr-preview {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .qr-preview canvas {
+            border: 3px solid white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin: 10px 0;
+        }
+
+        .gallery {
+            background: var(--bg-primary);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            margin-top: 30px;
+        }
+
+        .gallery h2 {
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gallery-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .qr-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .qr-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .qr-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .qr-card canvas {
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .qr-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .template-btn {
+            padding: 15px;
+            border: 2px solid var(--border);
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .template-btn:hover,
+        .template-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .panel {
+                padding: 20px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header fade-in">
+            <h1>🚀 QR Gallery Pro</h1>
+            <p>Create, customize, and manage professional QR code galleries with advanced features and enterprise-grade functionality</p>
+        </header>
+
+        <div class="statistics fade-in">
+            <div class="stat-card">
+                <span class="stat-number" id="totalQRs">0</span>
+                <div class="stat-label">Total QR Codes</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalScans">0</span>
+                <div class="stat-label">Estimated Scans</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="activeProjects">0</span>
+                <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="exportCount">0</span>
+                <div class="stat-label">Exports Generated</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel fade-in">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    QR Code Creator
+                </h2>
+                
+                <div class="form-group">
+                    <label>Quick Templates</label>
+                    <div class="templates">
+                        <div class="template-btn active" data-template="custom">Custom</div>
+                        <div class="template-btn" data-template="portfolio">Portfolio</div>
+                        <div class="template-btn" data-template="github">GitHub</div>
+                        <div class="template-btn" data-template="linkedin">LinkedIn</div>
+                        <div class="template-btn" data-template="resume">Resume</div>
+                        <div class="template-btn" data-template="contact">Contact</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="qrTitle">Title/Label</label>
+                    <input type="text" id="qrTitle" placeholder="e.g., My Portfolio, GitHub Profile" maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="qrDescription">Description</label>
+                    <textarea id="qrDescription" rows="2" placeholder="Brief description of what this QR code links to" maxlength="200"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="qrUrl">URL/Content</label>
+                    <input type="url" id="qrUrl" placeholder="https://example.com" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="qrCategory">Category</label>
+                        <select id="qrCategory">
+                            <option value="portfolio">Portfolio</option>
+                            <option value="social">Social Media</option>
+                            <option value="professional">Professional</option>
+                            <option value="project">Project</option>
+                            <option value="contact">Contact</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="qrSize">Size (px)</label>
+                        <select id="qrSize">
+                            <option value="128">Small (128px)</option>
+                            <option value="256" selected>Medium (256px)</option>
+                            <option value="512">Large (512px)</option>
+                            <option value="1024">XL (1024px)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Foreground Color</label>
+                        <div class="color-input-group">
+                            <input type="text" id="qrForeground" value="#000000">
+                            <input type="color" id="qrForegroundPicker" value="#000000" class="color-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Background Color</label>
+                        <div class="color-input-group">
+                            <input type="text" id="qrBackground" value="#ffffff">
+                            <input type="color" id="qrBackgroundPicker" value="#ffffff" class="color-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="errorCorrection">Error Correction</label>
+                        <select id="errorCorrection">
+                            <option value="L">Low (7%)</option>
+                            <option value="M" selected>Medium (15%)</option>
+                            <option value="Q">Quartile (25%)</option>
+                            <option value="H">High (30%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="qrPriority">Priority</label>
+                        <select id="qrPriority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="btn-grid">
+                    <button class="btn" onclick="generateQR()">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        Generate QR
+                    </button>
+                    <button class="btn btn-success" onclick="addToGallery()" id="addBtn" disabled>
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Add to Gallery
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel fade-in">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Live Preview
+                </h2>
+                <div class="qr-preview" id="qrPreview">
+                    <p>Enter URL and click "Generate QR" to see preview</p>
+                </div>
+                <div class="btn-grid" id="previewActions" style="display: none;">
+                    <button class="btn btn-secondary" onclick="downloadQR('png')">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>
+                        PNG
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadQR('svg')">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>
+                        SVG
+                    </button>
+                    <button class="btn btn-warning" onclick="testQR()">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14H13V16H11V14M11,6H13V12H11V6Z" /></svg>
+                        Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery fade-in">
+            <div class="gallery-controls">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M7,11H17V13H7V11M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M4,6V18H20V6H4Z" /></svg>
+                    QR Code Gallery
+                    <span id="galleryCount">(0)</span>
+                </h2>
+                <div>
+                    <select id="sortBy">
+                        <option value="date">Sort by Date</option>
+                        <option value="title">Sort by Title</option>
+                        <option value="category">Sort by Category</option>
+                        <option value="priority">Sort by Priority</option>
+                    </select>
+                    <select id="filterCategory" style="margin-left: 10px;">
+                        <option value="all">All Categories</option>
+                        <option value="portfolio">Portfolio</option>
+                        <option value="social">Social Media</option>
+                        <option value="professional">Professional</option>
+                        <option value="project">Project</option>
+                        <option value="contact">Contact</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <button class="btn btn-warning" onclick="exportGallery()" style="margin-left: 10px;">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>
+                        Export All
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearGallery()" style="margin-left: 10px;">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>
+                        Clear All
+                    </button>
+                </div>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #64748b;">
+                    <svg style="width: 64px; height: 64px; margin-bottom: 20px; opacity: 0.5;" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" />
+                    </svg>
+                    <h3>No QR Codes Yet</h3>
+                    <p>Create your first QR code to get started!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <h2>Export Gallery</h2>
+            <p>Choose your export format and options:</p>
+            
+            <div class="form-group">
+                <label>Export Format</label>
+                <div class="export-options">
+                    <button class="btn" onclick="selectExportFormat('pdf')">PDF Portfolio</button>
+                    <button class="btn" onclick="selectExportFormat('zip')">ZIP Archive</button>
+                    <button class="btn" onclick="selectExportFormat('html')">HTML Page</button>
+                    <button class="btn" onclick="selectExportFormat('json')">JSON Data</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="includeMetadata" checked> Include metadata
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="includePreview" checked> Include QR previews
+                </label>
+            </div>
+
+            <div class="progress-bar" id="exportProgress" style="display: none;">
+                <div class="progress-fill"></div>
+            </div>
+
+            <div class="btn-grid">
+                <button class="btn btn-success" id="confirmExport">Export</button>
+                <button class="btn btn-secondary" onclick="closeModal('exportModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        class QRGalleryPro {
+            constructor() {
+                this.qrCodes = JSON.parse(localStorage.getItem('qrGallery') || '[]');
+                this.currentQR = null;
+                this.exportCount = parseInt(localStorage.getItem('exportCount') || '0');
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadGallery();
+                this.updateStatistics();
+                this.loadTemplates();
+            }
+
+            setupEventListeners() {
+                // Color picker sync
+                document.getElementById('qrForegroundPicker').addEventListener('input', (e) => {
+                    document.getElementById('qrForeground').value = e.target.value;
+                    if (this.currentQR) this.generateQR();
+                });
+
+                document.getElementById('qrBackgroundPicker').addEventListener('input', (e) => {
+                    document.getElementById('qrBackground').value = e.target.value;
+                    if (this.currentQR) this.generateQR();
+                });
+
+                document.getElementById('qrForeground').addEventListener('input', (e) => {
+                    document.getElementById('qrForegroundPicker').value = e.target.value;
+                    if (this.currentQR) this.generateQR();
+                });
+
+                document.getElementById('qrBackground').addEventListener('input', (e) => {
+                    document.getElementById('qrBackgroundPicker').value = e.target.value;
+                    if (this.currentQR) this.generateQR();
+                });
+
+                // Auto-generate on URL change
+                document.getElementById('qrUrl').addEventListener('input', () => {
+                    if (document.getElementById('qrUrl').value.trim()) {
+                        setTimeout(() => this.generateQR(), 300);
+                    }
+                });
+
+                // Size change
+                document.getElementById('qrSize').addEventListener('change', () => {
+                    if (this.currentQR) this.generateQR();
+                });
+
+                // Error correction change
+                document.getElementById('errorCorrection').addEventListener('change', () => {
+                    if (this.currentQR) this.generateQR();
+                });
+
+                // Template selection
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.selectTemplate(btn.dataset.template));
+                });
+
+                // Gallery controls
+                document.getElementById('sortBy').addEventListener('change', () => this.loadGallery());
+                document.getElementById('filterCategory').addEventListener('change', () => this.loadGallery());
+
+                // Modal close on outside click
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.remove('active');
+                        }
+                    });
+                });
+            }
+
+            loadTemplates() {
+                const templates = {
+                    portfolio: {
+                        title: 'My Portfolio',
+                        description: 'Showcase of my professional work and achievements',
+                        url: 'https://yourname.github.io',
+                        category: 'portfolio',
+                        foreground: '#2563eb',
+                        background: '#ffffff'
+                    },
+                    github: {
+                        title: 'GitHub Profile',
+                        description: 'My open source contributions and repositories',
+                        url: 'https://github.com/yourusername',
+                        category: 'professional',
+                        foreground: '#24292e',
+                        background: '#ffffff'
+                    },
+                    linkedin: {
+                        title: 'LinkedIn Profile',
+                        description: 'Connect with me professionally',
+                        url: 'https://linkedin.com/in/yourname',
+                        category: 'professional',
+                        foreground: '#0077b5',
+                        background: '#ffffff'
+                    },
+                    resume: {
+                        title: 'My Resume',
+                        description: 'Download my latest resume PDF',
+                        url: 'https://drive.google.com/file/d/your-resume-id',
+                        category: 'professional',
+                        foreground: '#059669',
+                        background: '#ffffff'
+                    },
+                    contact: {
+                        title: 'Contact Info',
+                        description: 'Get in touch with me',
+                        url: 'mailto:your.email@example.com',
+                        category: 'contact',
+                        foreground: '#dc2626',
+                        background: '#ffffff'
+                    }
+                };
+
+                this.templates = templates;
+            }
+
+            selectTemplate(templateName) {
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.template === templateName);
+                });
+
+                if (templateName === 'custom') return;
+
+                const template = this.templates[templateName];
+                if (template) {
+                    document.getElementById('qrTitle').value = template.title;
+                    document.getElementById('qrDescription').value = template.description;
+                    document.getElementById('qrUrl').value = template.url;
+                    document.getElementById('qrCategory').value = template.category;
+                    document.getElementById('qrForeground').value = template.foreground;
+                    document.getElementById('qrBackground').value = template.background;
+                    document.getElementById('qrForegroundPicker').value = template.foreground;
+                    document.getElementById('qrBackgroundPicker').value = template.background;
+                    
+                    this.generateQR();
+                }
+            }
+
+            generateQR() {
+                const url = document.getElementById('qrUrl').value.trim();
+                if (!url) return;
+
+                try {
+                    const size = parseInt(document.getElementById('qrSize').value);
+                    const foreground = document.getElementById('qrForeground').value;
+                    const background = document.getElementById('qrBackground').value;
+                    const errorCorrection = document.getElementById('errorCorrection').value;
+
+                    const canvas = document.createElement('canvas');
+                    const qr = new QRious({
+                        element: canvas,
+                        value: url,
+                        size: size,
+                        foreground: foreground,
+                        background: background,
+                        level: errorCorrection
+                    });
+
+                    const preview = document.getElementById('qrPreview');
+                    preview.innerHTML = '';
+                    preview.appendChild(canvas);
+
+                    const info = document.createElement('div');
+                    info.style.marginTop = '15px';
+                    info.innerHTML = `
+                        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 5px;">
+                            <strong>URL:</strong> ${url.length > 50 ? url.substring(0, 47) + '...' : url}
+                        </p>
+                        <p style="font-size: 0.8rem; color: #64748b;">
+                            Size: ${size}x${size}px | Error Correction: ${errorCorrection} | 
+                            Estimated Capacity: ${this.getCapacityInfo(errorCorrection)}
+                        </p>
+                    `;
+                    preview.appendChild(info);
+
+                    this.currentQR = { canvas, url, size, foreground, background, errorCorrection };
+                    document.getElementById('addBtn').disabled = false;
+                    document.getElementById('previewActions').style.display = 'grid';
+
+                    this.showToast('QR Code generated successfully!', 'success');
+                } catch (error) {
+                    this.showToast('Error generating QR code: ' + error.message, 'error');
+                }
+            }
+
+            getCapacityInfo(level) {
+                const capacities = {
+                    'L': '2953 chars',
+                    'M': '2331 chars',
+                    'Q': '1663 chars',
+                    'H': '1273 chars'
+                };
+                return capacities[level] || 'Unknown';
+            }
+
+            addToGallery() {
+                if (!this.currentQR) return;
+
+                const title = document.getElementById('qrTitle').value.trim() || 'Untitled QR Code';
+                const description = document.getElementById('qrDescription').value.trim();
+                const category = document.getElementById('qrCategory').value;
+                const priority = document.getElementById('qrPriority').value;
+
+                const qrData = {
+                    id: Date.now() + Math.random(),
+                    title,
+                    description,
+                    url: this.currentQR.url,
+                    category,
+                    priority,
+                    size: this.currentQR.size,
+                    foreground: this.currentQR.foreground,
+                    background: this.currentQR.background,
+                    errorCorrection: this.currentQR.errorCorrection,
+                    canvas: this.currentQR.canvas.toDataURL(),
+                    created: new Date().toISOString(),
+                    scans: Math.floor(Math.random() * 100) // Simulated scan count
+                };
+
+                this.qrCodes.unshift(qrData);
+                this.saveToStorage();
+                this.loadGallery();
+                this.updateStatistics();
+                this.clearForm();
+                
+                this.showToast(`"${title}" added to gallery!`, 'success');
+            }
+
+            clearForm() {
+                document.getElementById('qrTitle').value = '';
+                document.getElementById('qrDescription').value = '';
+                document.getElementById('qrUrl').value = '';
+                document.getElementById('qrCategory').value = 'portfolio';
+                document.getElementById('qrPriority').value = 'medium';
+                document.getElementById('qrSize').value = '256';
+                document.getElementById('qrForeground').value = '#000000';
+                document.getElementById('qrBackground').value = '#ffffff';
+                document.getElementById('qrForegroundPicker').value = '#000000';
+                document.getElementById('qrBackgroundPicker').value = '#ffffff';
+                document.getElementById('errorCorrection').value = 'M';
+                
+                document.getElementById('qrPreview').innerHTML = '<p>Enter URL and click "Generate QR" to see preview</p>';
+                document.getElementById('previewActions').style.display = 'none';
+                document.getElementById('addBtn').disabled = true;
+                this.currentQR = null;
+
+                // Reset template selection
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.template === 'custom');
+                });
+            }
+
+            loadGallery() {
+                const sortBy = document.getElementById('sortBy').value;
+                const filterCategory = document.getElementById('filterCategory').value;
+
+                let filteredQRs = [...this.qrCodes];
+                
+                // Filter by category
+                if (filterCategory !== 'all') {
+                    filteredQRs = filteredQRs.filter(qr => qr.category === filterCategory);
+                }
+
+                // Sort
+                filteredQRs.sort((a, b) => {
+                    switch (sortBy) {
+                        case 'title':
+                            return a.title.localeCompare(b.title);
+                        case 'category':
+                            return a.category.localeCompare(b.category);
+                        case 'priority':
+                            const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
+                            return priorityOrder[b.priority] - priorityOrder[a.priority];
+                        default: // date
+                            return new Date(b.created) - new Date(a.created);
+                    }
+                });
+
+                this.renderGallery(filteredQRs);
+            }
+
+            renderGallery(qrs) {
+                const grid = document.getElementById('galleryGrid');
+                const count = document.getElementById('galleryCount');
+                count.textContent = `(${qrs.length})`;
+
+                if (qrs.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #64748b;">
+                            <svg style="width: 64px; height: 64px; margin-bottom: 20px; opacity: 0.5;" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" />
+                            </svg>
+                            <h3>No QR Codes Found</h3>
+                            <p>Try adjusting your filters or create a new QR code!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = qrs.map(qr => this.createQRCard(qr)).join('');
+            }
+
+            createQRCard(qr) {
+                const priorityColors = {
+                    low: '#64748b',
+                    medium: '#f59e0b',
+                    high: '#ef4444',
+                    critical: '#dc2626'
+                };
+
+                const priorityColor = priorityColors[qr.priority];
+                const createdDate = new Date(qr.created).toLocaleDateString();
+
+                return `
+                    <div class="qr-card slide-up" data-id="${qr.id}">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <h3>${qr.title}</h3>
+                            <span style="background: ${priorityColor}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; text-transform: uppercase;">
+                                ${qr.priority}
+                            </span>
+                        </div>
+                        
+                        ${qr.description ? `<p>${qr.description}</p>` : ''}
+                        
+                        <p style="font-size: 0.8rem; margin-bottom: 5px;">
+                            <strong>URL:</strong> ${qr.url.length > 40 ? qr.url.substring(0, 37) + '...' : qr.url}
+                        </p>
+                        
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 15px;">
+                            <span>📁 ${qr.category}</span>
+                            <span>📅 ${createdDate}</span>
+                            <span>📊 ${qr.scans} scans</span>
+                        </div>
+
+                        <div style="text-align: center; margin: 15px 0;">
+                            <img src="${qr.canvas}" style="max-width: 150px; border-radius: 8px; border: 2px solid #e2e8f0;" alt="QR Code">
+                        </div>
+
+                        <div class="qr-card-actions">
+                            <button class="btn btn-sm" onclick="qrApp.openUrl('${qr.url}')">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" /></svg>
+                                Open
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="qrApp.downloadSingle('${qr.id}', 'png')">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>
+                                Save
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="qrApp.editQR('${qr.id}')">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
+                                Edit
+                            </button>
+                            <button class="btn btn-sm" style="background: #dc2626;" onclick="qrApp.deleteQR('${qr.id}')">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            editQR(id) {
+                const qr = this.qrCodes.find(q => q.id == id);
+                if (!qr) return;
+
+                // Populate form with QR data
+                document.getElementById('qrTitle').value = qr.title;
+                document.getElementById('qrDescription').value = qr.description || '';
+                document.getElementById('qrUrl').value = qr.url;
+                document.getElementById('qrCategory').value = qr.category;
+                document.getElementById('qrPriority').value = qr.priority;
+                document.getElementById('qrSize').value = qr.size;
+                document.getElementById('qrForeground').value = qr.foreground;
+                document.getElementById('qrBackground').value = qr.background;
+                document.getElementById('qrForegroundPicker').value = qr.foreground;
+                document.getElementById('qrBackgroundPicker').value = qr.background;
+                document.getElementById('errorCorrection').value = qr.errorCorrection;
+
+                // Generate preview
+                this.generateQR();
+
+                // Delete original
+                this.deleteQR(id, false);
+
+                // Scroll to form
+                document.querySelector('.main-content').scrollIntoView({ behavior: 'smooth' });
+
+                this.showToast('QR Code loaded for editing', 'success');
+            }
+
+            deleteQR(id, showConfirm = true) {
+                if (showConfirm && !confirm('Are you sure you want to delete this QR code?')) {
+                    return;
+                }
+
+                this.qrCodes = this.qrCodes.filter(qr => qr.id != id);
+                this.saveToStorage();
+                this.loadGallery();
+                this.updateStatistics();
+                
+                if (showConfirm) {
+                    this.showToast('QR Code deleted successfully', 'success');
+                }
+            }
+
+            clearGallery() {
+                if (this.qrCodes.length === 0) {
+                    this.showToast('Gallery is already empty', 'error');
+                    return;
+                }
+
+                if (!confirm(`Are you sure you want to delete all ${this.qrCodes.length} QR codes?`)) {
+                    return;
+                }
+
+                this.qrCodes = [];
+                this.saveToStorage();
+                this.loadGallery();
+                this.updateStatistics();
+                this.showToast('Gallery cleared successfully', 'success');
+            }
+
+            openUrl(url) {
+                window.open(url, '_blank');
+            }
+
+            downloadQR(format) {
+                if (!this.currentQR) return;
+
+                const title = document.getElementById('qrTitle').value.trim() || 'qr-code';
+                const filename = `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${format}`;
+
+                if (format === 'png') {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = this.currentQR.canvas.toDataURL();
+                    link.click();
+                } else if (format === 'svg') {
+                    // For SVG, we'll create a simple SVG version
+                    this.downloadAsSVG(filename);
+                }
+
+                this.exportCount++;
+                localStorage.setItem('exportCount', this.exportCount.toString());
+                this.updateStatistics();
+                this.showToast(`Downloaded as ${format.toUpperCase()}`, 'success');
+            }
+
+            downloadSingle(id, format) {
+                const qr = this.qrCodes.find(q => q.id == id);
+                if (!qr) return;
+
+                const filename = `${qr.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${format}`;
+                
+                if (format === 'png') {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = qr.canvas;
+                    link.click();
+                }
+
+                this.exportCount++;
+                localStorage.setItem('exportCount', this.exportCount.toString());
+                this.updateStatistics();
+                this.showToast(`"${qr.title}" downloaded`, 'success');
+            }
+
+            downloadAsSVG(filename) {
+                // Create a simple SVG version of the QR code
+                const canvas = this.currentQR.canvas;
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // This is a simplified SVG conversion
+                const svg = `
+                    <svg width="${canvas.width}" height="${canvas.height}" xmlns="http://www.w3.org/2000/svg">
+                        <image href="${canvas.toDataURL()}" width="${canvas.width}" height="${canvas.height}"/>
+                    </svg>
+                `;
+
+                const blob = new Blob([svg], { type: 'image/svg+xml' });
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            testQR() {
+                if (!this.currentQR) return;
+
+                const url = this.currentQR.url;
+                if (url.startsWith('http://') || url.startsWith('https://')) {
+                    window.open(url, '_blank');
+                    this.showToast('QR Code test successful - URL opened', 'success');
+                } else if (url.startsWith('mailto:')) {
+                    window.location.href = url;
+                    this.showToast('Email client should open', 'success');
+                } else {
+                    this.showToast('QR Code contains: ' + url, 'success');
+                }
+            }
+
+            exportGallery() {
+                if (this.qrCodes.length === 0) {
+                    this.showToast('No QR codes to export', 'error');
+                    return;
+                }
+                
+                document.getElementById('exportModal').classList.add('active');
+            }
+
+            selectExportFormat(format) {
+                const modal = document.getElementById('exportModal');
+                const confirmBtn = document.getElementById('confirmExport');
+                
+                confirmBtn.onclick = () => this.executeExport(format);
+                confirmBtn.textContent = `Export as ${format.toUpperCase()}`;
+                
+                this.showToast(`Selected ${format.toUpperCase()} export format`, 'success');
+            }
+
+            executeExport(format) {
+                const includeMetadata = document.getElementById('includeMetadata').checked;
+                const includePreview = document.getElementById('includePreview').checked;
+                const progressBar = document.getElementById('exportProgress');
+                const progressFill = progressBar.querySelector('.progress-fill');
+                
+                progressBar.style.display = 'block';
+                document.getElementById('confirmExport').disabled = true;
+                
+                let progress = 0;
+                const updateProgress = (value) => {
+                    progress = value;
+                    progressFill.style.width = `${progress}%`;
+                };
+
+                setTimeout(() => {
+                    updateProgress(20);
+                    
+                    if (format === 'json') {
+                        this.exportAsJSON(includeMetadata, includePreview);
+                    } else if (format === 'html') {
+                        this.exportAsHTML(includeMetadata, includePreview);
+                    } else if (format === 'pdf') {
+                        this.exportAsPDF(includeMetadata, includePreview, updateProgress);
+                        return; // PDF export handles its own progress
+                    } else if (format === 'zip') {
+                        this.exportAsZIP(includeMetadata, includePreview);
+                    }
+                    
+                    updateProgress(100);
+                    
+                    setTimeout(() => {
+                        this.closeModal('exportModal');
+                        this.exportCount++;
+                        localStorage.setItem('exportCount', this.exportCount.toString());
+                        this.updateStatistics();
+                        this.showToast(`Gallery exported as ${format.toUpperCase()}!`, 'success');
+                    }, 500);
+                }, 300);
+            }
+
+            exportAsJSON(includeMetadata, includePreview) {
+                const data = this.qrCodes.map(qr => {
+                    const exportData = {
+                        title: qr.title,
+                        url: qr.url,
+                        category: qr.category,
+                        priority: qr.priority
+                    };
+                    
+                    if (includeMetadata) {
+                        exportData.description = qr.description;
+                        exportData.created = qr.created;
+                        exportData.scans = qr.scans;
+                        exportData.size = qr.size;
+                        exportData.foreground = qr.foreground;
+                        exportData.background = qr.background;
+                        exportData.errorCorrection = qr.errorCorrection;
+                    }
+                    
+                    if (includePreview) {
+                        exportData.qrImage = qr.canvas;
+                    }
+                    
+                    return exportData;
+                });
+
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.download = `qr-gallery-${new Date().toISOString().split('T')[0]}.json`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            exportAsHTML(includeMetadata, includePreview) {
+                const html = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>QR Code Gallery Export</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+                        .header { text-align: center; margin-bottom: 40px; }
+                        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+                        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                        .card h3 { margin-top: 0; color: #333; }
+                        .card img { max-width: 200px; border-radius: 8px; margin: 10px 0; }
+                        .metadata { font-size: 0.9rem; color: #666; }
+                        .priority { padding: 2px 8px; border-radius: 12px; color: white; font-size: 0.8rem; }
+                        .priority.high { background: #ef4444; }
+                        .priority.medium { background: #f59e0b; }
+                        .priority.low { background: #64748b; }
+                        .priority.critical { background: #dc2626; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🚀 QR Code Gallery</h1>
+                        <p>Generated on ${new Date().toLocaleDateString()} | ${this.qrCodes.length} QR Codes</p>
+                    </div>
+                    <div class="gallery">
+                        ${this.qrCodes.map(qr => `
+                            <div class="card">
+                                <h3>${qr.title} <span class="priority ${qr.priority}">${qr.priority}</span></h3>
+                                ${qr.description ? `<p>${qr.description}</p>` : ''}
+                                ${includePreview ? `<div style="text-align: center;"><img src="${qr.canvas}" alt="QR Code"></div>` : ''}
+                                <p><strong>URL:</strong> <a href="${qr.url}" target="_blank">${qr.url}</a></p>
+                                ${includeMetadata ? `
+                                    <div class="metadata">
+                                        <p><strong>Category:</strong> ${qr.category}</p>
+                                        <p><strong>Created:</strong> ${new Date(qr.created).toLocaleDateString()}</p>
+                                        <p><strong>Scans:</strong> ${qr.scans}</p>
+                                        <p><strong>Size:</strong> ${qr.size}x${qr.size}px</p>
+                                        <p><strong>Colors:</strong> ${qr.foreground} / ${qr.background}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </body>
+                </html>
+                `;
+
+                const blob = new Blob([html], { type: 'text/html' });
+                const link = document.createElement('a');
+                link.download = `qr-gallery-${new Date().toISOString().split('T')[0]}.html`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            exportAsPDF(includeMetadata, includePreview, updateProgress) {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                
+                // Title page
+                pdf.setFontSize(24);
+                pdf.text('QR Code Gallery', 105, 30, { align: 'center' });
+                
+                pdf.setFontSize(12);
+                pdf.text(`Generated on ${new Date().toLocaleDateString()}`, 105, 45, { align: 'center' });
+                pdf.text(`${this.qrCodes.length} QR Codes`, 105, 55, { align: 'center' });
+
+                let yPosition = 80;
+                let pageNumber = 1;
+
+                this.qrCodes.forEach((qr, index) => {
+                    updateProgress(20 + (index / this.qrCodes.length) * 70);
+                    
+                    if (yPosition > 250) {
+                        pdf.addPage();
+                        yPosition = 20;
+                        pageNumber++;
+                    }
+
+                    // Title
+                    pdf.setFontSize(16);
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text(qr.title, 20, yPosition);
+                    
+                    // Priority badge
+                    pdf.setFontSize(10);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text(`[${qr.priority.toUpperCase()}]`, 150, yPosition);
+                    
+                    yPosition += 10;
+
+                    if (qr.description && includeMetadata) {
+                        pdf.setFontSize(10);
+                        const lines = pdf.splitTextToSize(qr.description, 170);
+                        pdf.text(lines, 20, yPosition);
+                        yPosition += lines.length * 5 + 5;
+                    }
+
+                    // URL
+                    pdf.setFontSize(10);
+                    pdf.text('URL: ' + qr.url, 20, yPosition);
+                    yPosition += 10;
+
+                    if (includePreview) {
+                        try {
+                            pdf.addImage(qr.canvas, 'PNG', 20, yPosition, 40, 40);
+                        } catch (e) {
+                            console.warn('Could not add QR image to PDF:', e);
+                        }
+                    }
+
+                    if (includeMetadata) {
+                        const metadataText = includePreview ? 65 : 20;
+                        pdf.setFontSize(8);
+                        pdf.text(`Category: ${qr.category}`, metadataText, yPosition + 5);
+                        pdf.text(`Created: ${new Date(qr.created).toLocaleDateString()}`, metadataText, yPosition + 12);
+                        pdf.text(`Scans: ${qr.scans}`, metadataText, yPosition + 19);
+                        pdf.text(`Size: ${qr.size}x${qr.size}px`, metadataText, yPosition + 26);
+                        pdf.text(`Colors: ${qr.foreground} / ${qr.background}`, metadataText, yPosition + 33);
+                    }
+
+                    yPosition += includePreview ? 50 : 20;
+                    
+                    // Separator line
+                    pdf.line(20, yPosition, 190, yPosition);
+                    yPosition += 10;
+                });
+
+                updateProgress(100);
+                
+                setTimeout(() => {
+                    pdf.save(`qr-gallery-${new Date().toISOString().split('T')[0]}.pdf`);
+                    this.closeModal('exportModal');
+                    this.exportCount++;
+                    localStorage.setItem('exportCount', this.exportCount.toString());
+                    this.updateStatistics();
+                    this.showToast('Gallery exported as PDF!', 'success');
+                }, 500);
+            }
+
+            exportAsZIP(includeMetadata, includePreview) {
+                // Create a simple text-based "ZIP" export (simulated)
+                let content = `QR Code Gallery Export\n`;
+                content += `Generated: ${new Date().toLocaleDateString()}\n`;
+                content += `Total QR Codes: ${this.qrCodes.length}\n\n`;
+                content += `${'='.repeat(50)}\n\n`;
+
+                this.qrCodes.forEach((qr, index) => {
+                    content += `${index + 1}. ${qr.title}\n`;
+                    content += `   URL: ${qr.url}\n`;
+                    content += `   Category: ${qr.category}\n`;
+                    content += `   Priority: ${qr.priority}\n`;
+                    
+                    if (includeMetadata) {
+                        content += `   Description: ${qr.description || 'None'}\n`;
+                        content += `   Created: ${new Date(qr.created).toLocaleDateString()}\n`;
+                        content += `   Scans: ${qr.scans}\n`;
+                        content += `   Size: ${qr.size}x${qr.size}px\n`;
+                        content += `   Colors: ${qr.foreground} / ${qr.background}\n`;
+                        content += `   Error Correction: ${qr.errorCorrection}\n`;
+                    }
+                    
+                    content += `\n${'─'.repeat(40)}\n\n`;
+                });
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.download = `qr-gallery-export-${new Date().toISOString().split('T')[0]}.txt`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+                
+                // Reset export modal
+                if (modalId === 'exportModal') {
+                    document.getElementById('exportProgress').style.display = 'none';
+                    document.getElementById('exportProgress').querySelector('.progress-fill').style.width = '0%';
+                    document.getElementById('confirmExport').disabled = false;
+                    document.getElementById('confirmExport').textContent = 'Export';
+                    document.getElementById('confirmExport').onclick = null;
+                }
+            }
+
+            updateStatistics() {
+                document.getElementById('totalQRs').textContent = this.qrCodes.length;
+                document.getElementById('totalScans').textContent = this.qrCodes.reduce((sum, qr) => sum + qr.scans, 0);
+                
+                const categories = [...new Set(this.qrCodes.map(qr => qr.category))];
+                document.getElementById('activeProjects').textContent = categories.length;
+                document.getElementById('exportCount').textContent = this.exportCount;
+            }
+
+            saveToStorage() {
+                try {
+                    localStorage.setItem('qrGallery', JSON.stringify(this.qrCodes));
+                } catch (error) {
+                    this.showToast('Error saving to storage: ' + error.message, 'error');
+                }
+            }
+
+            showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = `toast ${type}`;
+                toast.classList.add('show');
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // Batch operations
+            exportSelected() {
+                // Future feature: export only selected QR codes
+                this.showToast('Feature coming soon: Export selected QR codes', 'success');
+            }
+
+            duplicateQR(id) {
+                const qr = this.qrCodes.find(q => q.id == id);
+                if (!qr) return;
+
+                const duplicate = {
+                    ...qr,
+                    id: Date.now() + Math.random(),
+                    title: qr.title + ' (Copy)',
+                    created: new Date().toISOString(),
+                    scans: 0
+                };
+
+                this.qrCodes.unshift(duplicate);
+                this.saveToStorage();
+                this.loadGallery();
+                this.updateStatistics();
+                this.showToast(`"${qr.title}" duplicated!`, 'success');
+            }
+
+            // Analytics features
+            getAnalytics() {
+                const analytics = {
+                    totalQRs: this.qrCodes.length,
+                    totalScans: this.qrCodes.reduce((sum, qr) => sum + qr.scans, 0),
+                    avgScansPerQR: this.qrCodes.length ? Math.round(this.qrCodes.reduce((sum, qr) => sum + qr.scans, 0) / this.qrCodes.length) : 0,
+                    categoriesBreakdown: this.getCategoriesBreakdown(),
+                    priorityBreakdown: this.getPriorityBreakdown(),
+                    mostScannedQR: this.getMostScannedQR(),
+                    recentActivity: this.getRecentActivity()
+                };
+
+                return analytics;
+            }
+
+            getCategoriesBreakdown() {
+                const breakdown = {};
+                this.qrCodes.forEach(qr => {
+                    breakdown[qr.category] = (breakdown[qr.category] || 0) + 1;
+                });
+                return breakdown;
+            }
+
+            getPriorityBreakdown() {
+                const breakdown = {};
+                this.qrCodes.forEach(qr => {
+                    breakdown[qr.priority] = (breakdown[qr.priority] || 0) + 1;
+                });
+                return breakdown;
+            }
+
+            getMostScannedQR() {
+                if (this.qrCodes.length === 0) return null;
+                return this.qrCodes.reduce((max, qr) => qr.scans > max.scans ? qr : max);
+            }
+
+            getRecentActivity() {
+                const recent = this.qrCodes
+                    .sort((a, b) => new Date(b.created) - new Date(a.created))
+                    .slice(0, 5);
+                return recent;
+            }
+
+            // Search functionality
+            searchQRs(query) {
+                const searchTerm = query.toLowerCase().trim();
+                if (!searchTerm) return this.qrCodes;
+
+                return this.qrCodes.filter(qr => 
+                    qr.title.toLowerCase().includes(searchTerm) ||
+                    qr.description.toLowerCase().includes(searchTerm) ||
+                    qr.url.toLowerCase().includes(searchTerm) ||
+                    qr.category.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Keyboard shortcuts
+            setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    // Ctrl/Cmd + N: New QR Code
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                        e.preventDefault();
+                        this.clearForm();
+                        document.getElementById('qrUrl').focus();
+                    }
+
+                    // Ctrl/Cmd + S: Save current QR to gallery
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        if (this.currentQR && !document.getElementById('addBtn').disabled) {
+                            this.addToGallery();
+                        }
+                    }
+
+                    // Ctrl/Cmd + E: Export gallery
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                        e.preventDefault();
+                        this.exportGallery();
+                    }
+
+                    // Escape: Close modals
+                    if (e.key === 'Escape') {
+                        document.querySelectorAll('.modal.active').forEach(modal => {
+                            modal.classList.remove('active');
+                        });
+                    }
+                });
+            }
+
+            // Performance optimization
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Initialize performance features
+            initPerformanceFeatures() {
+                // Lazy loading for QR images
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                                observer.unobserve(img);
+                            }
+                        }
+                    });
+                });
+
+                // Observe gallery images
+                this.observeGalleryImages = () => {
+                    document.querySelectorAll('.qr-card img[data-src]').forEach(img => {
+                        observer.observe(img);
+                    });
+                };
+            }
+
+            // Theme management
+            initThemeSystem() {
+                const savedTheme = localStorage.getItem('qrGalleryTheme') || 'light';
+                this.applyTheme(savedTheme);
+            }
+
+            applyTheme(theme) {
+                document.body.setAttribute('data-theme', theme);
+                localStorage.setItem('qrGalleryTheme', theme);
+            }
+
+            toggleTheme() {
+                const currentTheme = document.body.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                this.applyTheme(newTheme);
+                this.showToast(`Switched to ${newTheme} theme`, 'success');
+            }
+
+            // Advanced features initialization
+            initAdvancedFeatures() {
+                this.setupKeyboardShortcuts();
+                this.initPerformanceFeatures();
+                this.initThemeSystem();
+
+                // Add search functionality
+                const searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Search QR codes...';
+                searchInput.style.marginLeft = '10px';
+                searchInput.style.padding = '8px 12px';
+                searchInput.style.border = '2px solid var(--border)';
+                searchInput.style.borderRadius = '6px';
+
+                const debouncedSearch = this.debounce((query) => {
+                    const results = this.searchQRs(query);
+                    this.renderGallery(results);
+                }, 300);
+
+                searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
+                
+                document.querySelector('.gallery-controls > div').appendChild(searchInput);
+
+                // Add theme toggle button
+                const themeToggle = document.createElement('button');
+                themeToggle.className = 'btn btn-secondary';
+                themeToggle.innerHTML = '🌙 Theme';
+                themeToggle.onclick = () => this.toggleTheme();
+                themeToggle.style.marginLeft = '10px';
+                
+                document.querySelector('.gallery-controls > div').appendChild(themeToggle);
+            }
+        }
+
+        // Global functions for onclick handlers
+        let qrApp;
+
+        window.generateQR = () => qrApp.generateQR();
+        window.addToGallery = () => qrApp.addToGallery();
+        window.downloadQR = (format) => qrApp.downloadQR(format);
+        window.testQR = () => qrApp.testQR();
+        window.exportGallery = () => qrApp.exportGallery();
+        window.clearGallery = () => qrApp.clearGallery();
+        window.selectExportFormat = (format) => qrApp.selectExportFormat(format);
+        window.closeModal = (modalId) => qrApp.closeModal(modalId);
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            qrApp = new QRGalleryPro();
+            qrApp.initAdvancedFeatures();
+            
+            // Add some demo data for showcase
+            if (qrApp.qrCodes.length === 0) {
+                // This would be removed in production, just for demo
+                setTimeout(() => {
+                    const demoButton = document.createElement('button');
+                    demoButton.className = 'btn btn-warning';
+                    demoButton.innerHTML = '✨ Load Demo Data';
+                    demoButton.style.marginTop = '20px';
+                    demoButton.onclick = () => {
+                        qrApp.loadDemoData();
+                        demoButton.remove();
+                    };
+                    document.querySelector('.gallery').appendChild(demoButton);
+                }, 1000);
+            }
+        });
+
+        // Add demo data method to QRGalleryPro class
+        QRGalleryPro.prototype.loadDemoData = function() {
+            const demoData = [
+                {
+                    id: Date.now() + 1,
+                    title: 'Professional Portfolio',
+                    description: 'Showcase of my software development projects and achievements',
+                    url: 'https://github.com/yourname',
+                    category: 'portfolio',
+                    priority: 'high',
+                    size: 256,
+                    foreground: '#2563eb',
+                    background: '#ffffff',
+                    errorCorrection: 'M',
+                    created: new Date(Date.now() - 86400000).toISOString(),
+                    scans: 127
+                },
+                {
+                    id: Date.now() + 2,
+                    title: 'LinkedIn Profile',
+                    description: 'Connect with me on LinkedIn for professional networking',
+                    url: 'https://linkedin.com/in/yourprofile',
+                    category: 'professional',
+                    priority: 'medium',
+                    size: 256,
+                    foreground: '#0077b5',
+                    background: '#ffffff',
+                    errorCorrection: 'M',
+                    created: new Date(Date.now() - 172800000).toISOString(),
+                    scans: 89
+                },
+                {
+                    id: Date.now() + 3,
+                    title: 'Resume Download',
+                    description: 'Download my latest resume in PDF format',
+                    url: 'https://drive.google.com/file/d/your-resume-id/view',
+                    category: 'professional',
+                    priority: 'critical',
+                    size: 512,
+                    foreground: '#059669',
+                    background: '#ffffff',
+                    errorCorrection: 'H',
+                    created: new Date(Date.now() - 259200000).toISOString(),
+                    scans: 234
+                }
+            ];
+
+            // Generate QR codes for demo data
+            demoData.forEach(item => {
+                const canvas = document.createElement('canvas');
+                new QRious({
+                    element: canvas,
+                    value: item.url,
+                    size: item.size,
+                    foreground: item.foreground,
+                    background: item.background,
+                    level: item.errorCorrection
+                });
+                item.canvas = canvas.toDataURL();
+            });
+
+            this.qrCodes = [...demoData, ...this.qrCodes];
+            this.saveToStorage();
+            this.loadGallery();
+            this.updateStatistics();
+            this.showToast('Demo data loaded! 🚀', 'success');
+        };
+    </script>
+</body>
+</html>
