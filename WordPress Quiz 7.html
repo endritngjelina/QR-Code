@@ -1,0 +1,3880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WordPress Mastery Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Raleway:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   1. CSS DESIGN TOKENS (theme-driven)
+═══════════════════════════════════════════ */
+:root {
+  --bg:          #080b12;
+  --bg2:         #0c101a;
+  --surface:     #10141d;
+  --surface2:    #161b27;
+  --surface3:    #1d2335;
+  --border:      #222840;
+  --border-h:    #3a4265;
+
+  --accent:      #e8b84b;
+  --accent-dark: #b08535;
+  --accent-light:#f5d280;
+  --accent-glow: rgba(232,184,75,.2);
+  --accent-bg:   rgba(232,184,75,.08);
+  --accent-bdr:  rgba(232,184,75,.3);
+
+  --text:        #e8ecf5;
+  --text-muted:  #6a7594;
+  --text-faint:  #2e3550;
+
+  --ok:          #3ecf7a;
+  --ok-bg:       rgba(62,207,122,.1);
+  --ok-bdr:      rgba(62,207,122,.3);
+  --err:         #f26c6c;
+  --err-bg:      rgba(242,108,108,.1);
+  --err-bdr:     rgba(242,108,108,.3);
+  --info:        #5b9cf6;
+  --info-bg:     rgba(91,156,246,.1);
+  --info-bdr:    rgba(91,156,246,.3);
+
+  --font-display:'Playfair Display', serif;
+  --font-body:   'DM Sans', sans-serif;
+  --font-mono:   'DM Mono', monospace;
+
+  --radius:      16px;
+  --radius-sm:   8px;
+  --radius-pill: 100px;
+  --shadow:      0 8px 40px rgba(0,0,0,.55);
+  --shadow-sm:   0 2px 12px rgba(0,0,0,.3);
+
+  --dur:         220ms;
+  --ease:        cubic-bezier(.16,1,.3,1);
+
+  --card-radius: 18px;
+  --card-bg:     var(--surface);
+  --card-blur:   0px;
+  --card-border: var(--border);
+
+  --fs-scale:    1;
+
+  /* glow spots for body bg */
+  --glow1: rgba(232,184,75,.07);
+  --glow2: rgba(91,156,246,.06);
+}
+
+/* ═══════════════════════════════════════════
+   2. THEME PRESETS
+═══════════════════════════════════════════ */
+[data-theme="light"] {
+  --bg:#f4f7fd; --bg2:#edf1fa; --surface:#ffffff; --surface2:#f0f4fb;
+  --surface3:#e6ecf7; --border:#cdd6ec; --border-h:#aab8d8;
+  --text:#1a1f2e; --text-muted:#6070a0; --text-faint:#b8c4d8;
+  --glow1:rgba(59,130,246,.1); --glow2:rgba(232,184,75,.08);
+  --shadow:0 4px 24px rgba(0,0,0,.12); --shadow-sm:0 1px 6px rgba(0,0,0,.08);
+}
+[data-theme="purple"] {
+  --bg:#0d091a; --bg2:#110d20; --surface:#160f2a; --surface2:#1d1535;
+  --surface3:#241c42; --border:#2e2050; --border-h:#4a3580;
+  --accent:#b06ef3; --accent-dark:#8045cc; --accent-light:#d0a0ff;
+  --accent-glow:rgba(176,110,243,.2); --accent-bg:rgba(176,110,243,.08);
+  --accent-bdr:rgba(176,110,243,.3);
+  --glow1:rgba(176,110,243,.08); --glow2:rgba(255,100,200,.05);
+}
+[data-theme="ocean"] {
+  --bg:#020f18; --bg2:#04141f; --surface:#07192a; --surface2:#0d2035;
+  --surface3:#132843; --border:#1a3555; --border-h:#2a5080;
+  --accent:#22d3ee; --accent-dark:#0891b2; --accent-light:#7de8f5;
+  --accent-glow:rgba(34,211,238,.2); --accent-bg:rgba(34,211,238,.08);
+  --accent-bdr:rgba(34,211,238,.3);
+  --glow1:rgba(34,211,238,.07); --glow2:rgba(56,189,248,.06);
+}
+[data-theme="forest"] {
+  --bg:#050f08; --bg2:#07130a; --surface:#0b1a0e; --surface2:#102015;
+  --surface3:#152a1b; --border:#1a3520; --border-h:#2a5030;
+  --accent:#4ade80; --accent-dark:#16a34a; --accent-light:#86efac;
+  --accent-glow:rgba(74,222,128,.2); --accent-bg:rgba(74,222,128,.08);
+  --accent-bdr:rgba(74,222,128,.3);
+  --glow1:rgba(74,222,128,.07); --glow2:rgba(34,197,94,.05);
+}
+[data-theme="sunset"] {
+  --bg:#120508; --bg2:#17060b; --surface:#1e0910; --surface2:#270c15;
+  --surface3:#31101c; --border:#401525; --border-h:#602035;
+  --accent:#fb7185; --accent-dark:#e11d48; --accent-light:#fda4af;
+  --accent-glow:rgba(251,113,133,.2); --accent-bg:rgba(251,113,133,.08);
+  --accent-bdr:rgba(251,113,133,.3);
+  --glow1:rgba(251,113,133,.08); --glow2:rgba(251,146,60,.06);
+}
+
+/* ═══════════════════════════════════════════
+   3. FONT PAIRINGS
+═══════════════════════════════════════════ */
+[data-font="bebas"]   { --font-display:'Bebas Neue',sans-serif; --font-body:'Inter',sans-serif; }
+[data-font="raleway"] { --font-display:'Raleway',sans-serif;    --font-body:'Nunito',sans-serif; }
+[data-font="space"]   { --font-display:'Space Mono',monospace;  --font-body:'Sora',sans-serif; }
+
+/* ═══════════════════════════════════════════
+   4. CARD STYLES
+═══════════════════════════════════════════ */
+[data-card="sharp"]  { --card-radius:5px; --radius:5px; --radius-sm:3px; --radius-pill:5px; }
+[data-card="glass"] .q-card,
+[data-card="glass"] .welcome-card,
+[data-card="glass"] .opt {
+  background: rgba(255,255,255,.05) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+/* ═══════════════════════════════════════════
+   5. BACKGROUND MODES
+═══════════════════════════════════════════ */
+body.bg-grid::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity:.4;
+}
+body.bg-dots::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image: radial-gradient(circle, var(--border-h) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity:.5;
+}
+
+/* ═══════════════════════════════════════════
+   6. ANIMATION CONTROLS
+═══════════════════════════════════════════ */
+.anim-off *, .anim-off *::before, .anim-off *::after {
+  animation-duration:.01ms!important; transition-duration:.01ms!important;
+}
+.anim-slow * { --dur:400ms; }
+.anim-fast * { --dur:100ms; }
+
+/* ═══════════════════════════════════════════
+   7. TEXT SCALE
+═══════════════════════════════════════════ */
+[data-size="sm"] { font-size:14px; }
+[data-size="lg"] { font-size:18px; }
+
+/* ═══════════════════════════════════════════
+   8. RESET + BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; -webkit-font-smoothing:antialiased; scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 65% 45% at 15% 5%, var(--glow1) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 55% at 85% 90%, var(--glow2) 0%, transparent 60%);
+  transition: background var(--dur) var(--ease);
+}
+button { cursor:pointer; background:none; border:none; font:inherit; color:inherit; }
+input  { font:inherit; color:inherit; }
+:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:var(--radius-sm); }
+
+/* ═══════════════════════════════════════════
+   9. CONFETTI
+═══════════════════════════════════════════ */
+#confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden; }
+.confetti-piece {
+  position:absolute; top:-20px;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%  { transform:translateY(0) rotate(0deg); opacity:1; }
+  80% { opacity:.9; }
+  100%{ transform:translateY(110vh) rotate(720deg); opacity:0; }
+}
+
+/* ═══════════════════════════════════════════
+   10. CUSTOMIZATION PANEL
+═══════════════════════════════════════════ */
+#panel-overlay {
+  position:fixed; inset:0; z-index:800;
+  background:rgba(0,0,0,.6);
+  opacity:0; pointer-events:none;
+  transition:opacity var(--dur) var(--ease);
+  backdrop-filter:blur(4px);
+}
+#panel-overlay.show { opacity:1; pointer-events:all; }
+
+#custom-panel {
+  position:fixed; top:0; right:0; bottom:0; z-index:900;
+  width:320px; max-width:92vw;
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  overflow-y:auto;
+  transform:translateX(100%);
+  transition:transform .35s var(--ease);
+  box-shadow: -8px 0 40px rgba(0,0,0,.5);
+}
+#custom-panel.open { transform:translateX(0); }
+
+.panel-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 22px 16px;
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0;
+  background:var(--surface);
+  z-index:1;
+}
+.panel-head h3 { font-family:var(--font-display); font-size:1.1rem; font-weight:700; letter-spacing:.04em; }
+.panel-head span { font-size:.7rem; color:var(--text-muted); margin-left:6px; }
+.btn-close-panel {
+  width:32px; height:32px; border-radius:50%;
+  background:var(--surface2); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; color:var(--text-muted);
+  transition:background var(--dur), color var(--dur);
+}
+.btn-close-panel:hover { background:var(--err-bg); color:var(--err); border-color:var(--err-bdr); }
+
+.panel-section { padding:18px 22px; border-bottom:1px solid var(--border); }
+.panel-section:last-child { border-bottom:none; padding-bottom:28px; }
+.ps-title {
+  font-size:.65rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--text-muted);
+  margin-bottom:12px; display:flex; align-items:center; gap:6px;
+}
+.ps-title::before { content:''; display:block; width:10px; height:2px; background:var(--accent); border-radius:2px; }
+
+/* Theme cards grid */
+.theme-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.theme-card {
+  border-radius:10px; padding:10px 6px;
+  border:2px solid var(--border);
+  cursor:pointer; text-align:center;
+  transition:border-color var(--dur), transform var(--dur);
+  background:var(--surface2);
+}
+.theme-card:hover { border-color:var(--border-h); transform:translateY(-2px); }
+.theme-card.active { border-color:var(--accent); }
+.theme-card .swatch {
+  width:28px; height:28px; border-radius:50%; margin:0 auto 6px;
+  border:2px solid rgba(255,255,255,.1);
+}
+.theme-card span { font-size:.62rem; font-weight:600; letter-spacing:.04em; color:var(--text-muted); }
+.theme-card.active span { color:var(--accent); }
+
+/* Font buttons */
+.font-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.font-btn {
+  border-radius:var(--radius-sm); padding:10px 12px;
+  border:2px solid var(--border); background:var(--surface2);
+  cursor:pointer; text-align:left;
+  transition:border-color var(--dur), background var(--dur);
+}
+.font-btn:hover { border-color:var(--border-h); background:var(--surface3); }
+.font-btn.active { border-color:var(--accent); background:var(--accent-bg); }
+.font-btn .fb-display { font-size:.95rem; font-weight:700; color:var(--text); line-height:1; }
+.font-btn .fb-body { font-size:.62rem; color:var(--text-muted); margin-top:3px; }
+.font-btn.active .fb-display { color:var(--accent); }
+
+/* Segmented controls */
+.seg-row { display:flex; gap:6px; }
+.seg-btn {
+  flex:1; border-radius:var(--radius-sm); padding:8px 6px;
+  border:2px solid var(--border); background:var(--surface2);
+  cursor:pointer; font-size:.75rem; font-weight:600;
+  text-align:center; color:var(--text-muted);
+  transition:all var(--dur);
+  display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.seg-btn:hover { border-color:var(--border-h); color:var(--text); }
+.seg-btn.active { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); }
+
+/* Color swatch picker */
+.accent-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:7px; margin-top:2px; }
+.accent-swatch {
+  aspect-ratio:1; border-radius:50%; cursor:pointer;
+  border:3px solid transparent;
+  transition:transform var(--dur), border-color var(--dur);
+}
+.accent-swatch:hover { transform:scale(1.15); }
+.accent-swatch.active { border-color:var(--text) !important; transform:scale(1.1); }
+
+/* Panel reset button */
+.btn-panel-reset {
+  display:block; width:100%; margin-top:12px;
+  border-radius:var(--radius-sm); padding:9px 14px;
+  border:1.5px solid var(--border); background:transparent;
+  font-size:.75rem; font-weight:600; color:var(--text-muted);
+  cursor:pointer; text-align:center;
+  transition:border-color var(--dur), color var(--dur), background var(--dur);
+}
+.btn-panel-reset:hover { border-color:var(--border-h); color:var(--text); background:var(--surface2); }
+
+/* ═══════════════════════════════════════════
+   11. GEAR BUTTON (floating)
+═══════════════════════════════════════════ */
+#gear-btn {
+  position:fixed; bottom:28px; right:28px; z-index:700;
+  width:50px; height:50px; border-radius:50%;
+  background:var(--surface); border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; box-shadow:var(--shadow);
+  transition:transform var(--dur), border-color var(--dur), box-shadow var(--dur);
+  color:var(--text-muted);
+}
+#gear-btn:hover { transform:rotate(45deg) scale(1.1); border-color:var(--accent); box-shadow:0 4px 24px var(--accent-glow); color:var(--accent); }
+
+/* ═══════════════════════════════════════════
+   12. INTRO SCREEN
+═══════════════════════════════════════════ */
+#intro-screen {
+  position:fixed; inset:0; z-index:500;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+  background:var(--bg);
+  transition:opacity .7s var(--ease), transform .7s var(--ease);
+}
+#intro-screen.exit { opacity:0; transform:scale(1.03); pointer-events:none; }
+
+.ig { position:absolute; border-radius:50%; pointer-events:none; filter:blur(70px); }
+.ig1 { width:500px; height:300px; background:radial-gradient(ellipse, var(--glow1) 0%, transparent 70%); top:-60px; left:-100px; animation:glowDrift 9s ease-in-out infinite alternate; }
+.ig2 { width:400px; height:250px; background:radial-gradient(ellipse, var(--glow2) 0%, transparent 70%); bottom:-60px; right:-80px; animation:glowDrift 11s ease-in-out infinite alternate-reverse; }
+.ig3 { width:250px; height:200px; background:radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%); top:45%; left:45%; transform:translate(-50%,-50%); animation:glowDrift 7s ease-in-out infinite alternate; }
+@keyframes glowDrift { 0%{transform:translate(0,0)} 100%{transform:translate(30px,18px)} }
+
+/* Floating WP particles */
+.wp-particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.wp-particle {
+  position:absolute; font-size:1.2rem; opacity:0;
+  animation:wpFloat linear infinite;
+}
+@keyframes wpFloat {
+  0%  { opacity:0; transform:translateY(0) rotate(0deg) scale(.8); }
+  10% { opacity:.6; }
+  90% { opacity:.3; }
+  100%{ opacity:0; transform:translateY(-90px) rotate(45deg) scale(1.1); }
+}
+
+/* Intro center card */
+.intro-center {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; align-items:center;
+  gap:1.2rem; text-align:center;
+  padding:3rem 2rem;
+  animation:introUp .9s var(--ease) both;
+}
+@keyframes introUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+.intro-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--accent-bg); border:1px solid var(--accent-bdr);
+  border-radius:var(--radius-pill); padding:6px 18px;
+  font-size:.72rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent);
+  animation:badgePulse 3s ease-in-out infinite alternate;
+}
+@keyframes badgePulse { 0%{box-shadow:0 0 0 0 transparent} 100%{box-shadow:0 0 18px 4px var(--accent-glow)} }
+
+.intro-badge .badge-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent); animation:dotBlink 1.5s ease-in-out infinite;
+}
+@keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+.intro-wp-icon {
+  font-size:3.5rem; line-height:1;
+  filter:drop-shadow(0 0 24px var(--accent-glow));
+  animation:iconFloat 4s ease-in-out infinite alternate;
+}
+@keyframes iconFloat { 0%{transform:translateY(0)} 100%{transform:translateY(-8px)} }
+
+.intro-title {
+  font-family:var(--font-display); font-weight:900;
+  font-size:clamp(2.4rem,7vw,5rem); line-height:1.05;
+  letter-spacing:.03em;
+  background:linear-gradient(135deg, var(--text) 30%, var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.intro-sub {
+  font-size:clamp(.95rem,2.5vw,1.2rem);
+  color:var(--text-muted); max-width:480px; line-height:1.65; font-weight:300;
+}
+
+/* Diamond divider */
+.intro-divider { display:flex; align-items:center; gap:.6rem; width:100%; max-width:300px; }
+.intro-divider::before,.intro-divider::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg, transparent, var(--accent-bdr));
+}
+.intro-divider::after { background:linear-gradient(90deg, var(--accent-bdr), transparent); }
+.intro-divider .d {
+  width:8px; height:8px; background:var(--accent);
+  transform:rotate(45deg); opacity:.7; flex-shrink:0;
+}
+
+.btn-intro {
+  margin-top:.4rem;
+  padding:1rem 2.8rem; border-radius:var(--radius-pill);
+  background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+  color:#0a0a0a; font-family:var(--font-display); font-weight:700;
+  font-size:1.3rem; letter-spacing:.08em; border:none; cursor:pointer;
+  display:inline-flex; align-items:center; gap:.7rem;
+  box-shadow:0 4px 28px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .2s, box-shadow .2s, filter .2s;
+  position:relative; overflow:hidden;
+}
+.btn-intro::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 55%);
+  pointer-events:none;
+}
+.btn-intro:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 8px 36px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.2); filter:brightness(1.05); }
+.btn-intro:active { transform:scale(.97); }
+.btn-arrow { display:inline-block; animation:arrowBounce 1.4s ease-in-out infinite; font-size:1.4rem; line-height:1; }
+@keyframes arrowBounce { 0%,100%{transform:translateX(0)} 50%{transform:translateX(5px)} }
+
+.intro-hint { font-size:.72rem; color:var(--text-faint); margin-top:-.3rem; }
+
+/* ── INTRO NAME INPUT ── */
+.intro-name-wrap {
+  width:100%; max-width:340px; text-align:left;
+}
+.intro-name-wrap label {
+  display:block; font-size:.68rem; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:8px; text-align:center;
+}
+.intro-name-input {
+  width:100%; background:rgba(255,255,255,.07);
+  border:1.5px solid var(--border-h);
+  border-radius:var(--radius); padding:14px 20px;
+  font-size:1rem; outline:none; color:var(--text);
+  text-align:center; letter-spacing:.02em;
+  backdrop-filter:blur(6px);
+  transition:border-color var(--dur), box-shadow var(--dur), background var(--dur);
+}
+.intro-name-input::placeholder { color:var(--text-faint); }
+.intro-name-input:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-glow);
+  background:rgba(255,255,255,.1);
+}
+.intro-name-error {
+  color:var(--err); font-size:.75rem; margin-top:7px;
+  text-align:center; display:none;
+}
+.intro-name-error.show { display:block; }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
+.shake { animation:shake .45s cubic-bezier(.36,.07,.19,.97) both; }
+
+/* ═══════════════════════════════════════════
+   13. APP WRAPPER + SCREENS
+═══════════════════════════════════════════ */
+#app {
+  position:relative; z-index:1;
+  width:100%; max-width:800px;
+  margin:0 auto; padding:20px;
+  min-height:100vh;
+  display:flex; align-items:flex-start; justify-content:center;
+}
+.screen { display:none; width:100%; animation:screenIn var(--dur) var(--ease); }
+.screen.active { display:block; }
+@keyframes screenIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════════════════════════
+   14. WELCOME SCREEN
+═══════════════════════════════════════════ */
+#welcome-screen { padding:50px 0 80px; }
+
+.welcome-card {
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:var(--card-radius); padding:40px;
+  box-shadow:var(--shadow); position:relative; overflow:hidden;
+  backdrop-filter:blur(var(--card-blur));
+}
+.welcome-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity:.6;
+}
+
+.welcome-logo {
+  display:inline-flex; align-items:center; gap:10px;
+  background:var(--accent-bg); border:1px solid var(--accent-bdr);
+  border-radius:var(--radius-pill); padding:7px 18px;
+  font-size:.72rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:28px;
+}
+.welcome-logo::before { content:'⬡'; font-size:1rem; }
+
+.welcome-card h1 {
+  font-family:var(--font-display); font-size:clamp(1.8rem,5vw,3rem);
+  font-weight:900; line-height:1.1; margin-bottom:12px;
+  background:linear-gradient(135deg,var(--text) 40%,var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.welcome-card p.sub {
+  color:var(--text-muted); font-size:1rem; line-height:1.65; max-width:500px; margin-bottom:32px;
+}
+
+/* No-questions warning */
+#no-q-warning {
+  display:none; margin-bottom:24px;
+  background:var(--info-bg); border:1px solid var(--info-bdr);
+  border-radius:var(--radius); padding:14px 18px;
+  font-size:.87rem; color:var(--info); line-height:1.55;
+}
+#no-q-warning.show { display:block; }
+#no-q-warning strong { display:block; margin-bottom:4px; }
+#no-q-warning code {
+  background:rgba(91,156,246,.15); border-radius:4px;
+  padding:1px 5px; font-family:var(--font-mono); font-size:.82rem;
+}
+
+.stats-row {
+  display:flex; gap:14px; flex-wrap:wrap; margin-bottom:32px;
+}
+.stat-pill {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:14px 20px; text-align:center; flex:1; min-width:90px;
+}
+.stat-pill .sn { font-family:var(--font-mono); font-size:1.4rem; color:var(--accent); font-weight:500; }
+.stat-pill .sl { font-size:.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.07em; margin-top:3px; }
+
+/* Name input */
+.name-wrap { max-width:400px; margin-bottom:26px; }
+.name-wrap label {
+  display:block; font-size:.72rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;
+}
+.name-wrap input {
+  width:100%; background:var(--surface2); border:1.5px solid var(--border);
+  border-radius:var(--radius-sm); padding:13px 18px;
+  font-size:1rem; outline:none; color:var(--text);
+  transition:border-color var(--dur), box-shadow var(--dur);
+}
+.name-wrap input::placeholder { color:var(--text-faint); }
+.name-wrap input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
+.name-error { color:var(--err); font-size:.78rem; margin-top:6px; display:none; }
+.name-error.show { display:block; }
+
+.btn-start {
+  background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+  color:#0a0a0a; border:none; border-radius:var(--radius-pill);
+  padding:15px 50px; font-family:var(--font-body); font-size:1rem; font-weight:700;
+  cursor:pointer; letter-spacing:.04em;
+  transition:transform var(--dur), box-shadow var(--dur), filter var(--dur);
+  box-shadow:0 4px 24px var(--accent-glow);
+}
+.btn-start:hover { transform:translateY(-2px); filter:brightness(1.07); box-shadow:0 8px 32px var(--accent-glow); }
+.btn-start:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+.tip-box {
+  margin-top:28px; background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius); padding:16px 20px;
+  font-size:.84rem; color:var(--text-muted); line-height:1.6;
+}
+.tip-box strong { color:var(--accent); }
+
+/* Keyboard shortcuts legend */
+.shortcuts {
+  margin-top:14px; display:flex; flex-wrap:wrap; gap:10px;
+}
+.sc {
+  display:flex; align-items:center; gap:6px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:6px 10px;
+  font-size:.72rem; color:var(--text-muted);
+}
+.sc kbd {
+  font-family:var(--font-mono); font-size:.68rem;
+  background:var(--surface3); border:1px solid var(--border-h);
+  border-radius:4px; padding:2px 6px; color:var(--text);
+}
+
+/* ═══════════════════════════════════════════
+   15. QUIZ SCREEN
+═══════════════════════════════════════════ */
+#quiz-screen { padding:20px 0 80px; }
+
+/* Top bar */
+.top-bar {
+  display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;
+}
+.q-counter {
+  font-family:var(--font-mono); font-size:.78rem; color:var(--text-muted); white-space:nowrap;
+}
+.q-counter span { color:var(--accent); font-weight:600; }
+
+.progress-track {
+  flex:1; height:5px; background:var(--surface2); border-radius:var(--radius-pill); overflow:hidden; min-width:60px;
+}
+.progress-fill {
+  height:100%; background:linear-gradient(90deg, var(--accent-dark), var(--accent));
+  border-radius:var(--radius-pill); transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+
+.score-badge {
+  font-family:var(--font-mono); font-size:.72rem;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:5px 12px;
+  color:var(--text-muted); white-space:nowrap; display:flex; align-items:center; gap:5px;
+}
+.score-badge .pts { color:var(--ok); font-weight:700; }
+
+.timer-badge {
+  font-family:var(--font-mono); font-size:.72rem;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:5px 12px;
+  color:var(--text-muted); white-space:nowrap;
+  transition:border-color var(--dur), color var(--dur);
+}
+.timer-badge.warn { border-color:var(--err-bdr); color:var(--err); }
+
+/* Question card */
+.q-card {
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:var(--card-radius); padding:30px 32px;
+  box-shadow:var(--shadow); position:relative; overflow:hidden;
+  backdrop-filter:blur(var(--card-blur));
+  transition:background var(--dur), border-color var(--dur);
+}
+.q-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity:.5;
+}
+
+.q-meta { display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.q-topic {
+  display:inline-block; font-size:.68rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:var(--accent); background:var(--accent-bg);
+  border:1px solid var(--accent-bdr); border-radius:var(--radius-sm); padding:4px 10px;
+}
+.multi-tag {
+  display:inline-block; font-size:.68rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--info); background:var(--info-bg);
+  border:1px solid var(--info-bdr); border-radius:var(--radius-sm); padding:4px 10px;
+}
+.q-num-badge {
+  margin-left:auto; font-family:var(--font-mono); font-size:.7rem;
+  color:var(--text-muted); background:var(--surface2);
+  border:1px solid var(--border); border-radius:var(--radius-sm); padding:4px 10px;
+}
+
+.q-text {
+  font-family:var(--font-display); font-size:clamp(1.05rem,2.5vw,1.3rem);
+  line-height:1.55; margin-bottom:10px; font-weight:700; color:var(--text);
+}
+.q-context {
+  font-size:.87rem; color:var(--text-muted); line-height:1.65;
+  margin-bottom:22px; padding:13px 16px;
+  background:var(--surface2); border-radius:var(--radius-sm);
+  border-left:3px solid var(--accent-dark);
+  display:none;
+}
+.q-context.show { display:block; }
+
+/* Options */
+.options-grid { display:flex; flex-direction:column; gap:9px; margin-bottom:18px; }
+.opt {
+  background:var(--surface2); border:1.5px solid var(--border);
+  border-radius:var(--card-radius); padding:13px 16px;
+  cursor:pointer; display:flex; align-items:center; gap:13px;
+  transition:border-color var(--dur), background var(--dur), transform var(--dur);
+  font-size:.94rem; line-height:1.45; user-select:none;
+}
+.opt:hover:not(.locked) { border-color:var(--accent-dark); background:var(--accent-bg); transform:translateX(3px); }
+.opt.selected { border-color:var(--accent); background:var(--accent-bg); }
+.opt.correct  { border-color:var(--ok)  !important; background:var(--ok-bg)  !important; }
+.opt.incorrect{ border-color:var(--err) !important; background:var(--err-bg) !important; }
+.opt.locked   { cursor:default; transform:none !important; }
+
+.opt-letter {
+  font-family:var(--font-mono); font-size:.72rem; font-weight:700;
+  color:var(--text-muted); background:var(--bg2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); min-width:26px; height:26px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:background var(--dur), color var(--dur), border-color var(--dur);
+}
+.opt.selected  .opt-letter { background:var(--accent); color:#0a0a0a; border-color:var(--accent); }
+.opt.correct   .opt-letter { background:var(--ok);  color:#fff; border-color:var(--ok); }
+.opt.incorrect .opt-letter { background:var(--err); color:#fff; border-color:var(--err); }
+.opt-check { margin-left:auto; font-size:1.1rem; flex-shrink:0; min-width:18px; text-align:center; }
+
+/* Actions */
+.actions-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px; }
+.btn-hint {
+  background:none; border:1.5px solid var(--border); border-radius:var(--radius-pill);
+  padding:9px 18px; color:var(--text-muted); font-size:.84rem; font-weight:500;
+  cursor:pointer; transition:all var(--dur); display:flex; align-items:center; gap:6px;
+}
+.btn-hint:hover:not(:disabled) { border-color:var(--accent-dark); color:var(--accent); }
+.btn-hint:disabled { opacity:.3; cursor:not-allowed; }
+
+.btn-submit {
+  background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+  color:#0a0a0a; border:none; border-radius:var(--radius-pill);
+  padding:11px 32px; font-size:.92rem; font-weight:700; cursor:pointer;
+  transition:transform var(--dur), filter var(--dur), box-shadow var(--dur);
+  box-shadow:0 3px 16px var(--accent-glow);
+}
+.btn-submit:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.08); }
+.btn-submit:disabled { opacity:.35; cursor:not-allowed; transform:none; }
+
+.btn-next {
+  background:var(--surface2); color:var(--text); border:1.5px solid var(--border);
+  border-radius:var(--radius-pill); padding:11px 32px;
+  font-size:.92rem; font-weight:600; cursor:pointer;
+  transition:border-color var(--dur), background var(--dur);
+  display:none; margin-left:auto; align-items:center; gap:6px;
+}
+.btn-next:hover { border-color:var(--accent); background:var(--accent-bg); }
+.btn-next.show { display:flex; }
+.btn-next::after { content:'→'; }
+
+/* Hint + explanation panels */
+.hint-panel {
+  background:var(--info-bg); border:1px solid var(--info-bdr);
+  border-radius:var(--radius); padding:13px 16px;
+  margin-top:12px; font-size:.86rem; color:var(--info); line-height:1.6;
+  display:none; animation:screenIn var(--dur) var(--ease);
+}
+.hint-panel.show { display:block; }
+.hint-panel::before { content:'💡 Hint: '; font-weight:700; }
+
+.exp-panel {
+  border-radius:var(--radius); padding:15px 17px;
+  margin-top:12px; font-size:.86rem; line-height:1.65;
+  display:none; animation:screenIn var(--dur) var(--ease);
+}
+.exp-panel.correct-exp { background:var(--ok-bg); border:1px solid var(--ok-bdr); color:#a8f0c6; }
+.exp-panel.incorrect-exp { background:var(--err-bg); border:1px solid var(--err-bdr); color:#f7b3b3; }
+.exp-panel.show { display:block; }
+.exp-head { font-weight:700; font-size:.92rem; margin-bottom:5px; }
+
+/* ═══════════════════════════════════════════
+   16. RESULT SCREEN
+═══════════════════════════════════════════ */
+#result-screen { text-align:center; padding:44px 0 80px; }
+
+.result-header { margin-bottom:28px; }
+.player-banner {
+  display:inline-flex; align-items:center; gap:9px;
+  background:var(--accent-bg); border:1px solid var(--accent-bdr);
+  border-radius:var(--radius-pill); padding:8px 20px;
+  font-size:.9rem; font-weight:700; color:var(--accent); margin-bottom:16px;
+}
+.player-banner::before { content:'👤'; }
+
+.timestamp {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:8px 18px;
+  font-size:.78rem; color:var(--text-muted); font-family:var(--font-mono);
+}
+.timestamp::before { content:'🕐'; }
+
+/* Score ring */
+.score-ring-wrap { margin:28px auto 24px; display:flex; justify-content:center; }
+.score-ring {
+  width:152px; height:152px; border-radius:50%;
+  border:4px solid var(--border); position:relative;
+  background:var(--surface); display:flex; align-items:center;
+  justify-content:center; flex-direction:column;
+}
+.score-ring svg {
+  position:absolute; inset:-4px;
+  width:calc(100% + 8px); height:calc(100% + 8px);
+  transform:rotate(-90deg);
+}
+.score-ring .sn {
+  font-family:var(--font-display); font-size:2.4rem;
+  color:var(--accent); line-height:1; font-weight:900;
+}
+.score-ring .sd { font-size:.75rem; color:var(--text-muted); margin-top:2px; }
+
+#result-screen h2 {
+  font-family:var(--font-display); font-size:clamp(1.6rem,4vw,2.2rem);
+  margin-bottom:6px; font-weight:900;
+}
+.result-sub { color:var(--text-muted); margin-bottom:32px; font-size:.98rem; }
+
+/* Breakdown grid */
+.breakdown-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:26px; text-align:center;
+}
+.bc {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:16px 12px;
+}
+.bc .bn { font-family:var(--font-mono); font-size:1.7rem; font-weight:700; }
+.bc .bl { font-size:.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.07em; margin-top:4px; }
+.bc-ok .bn  { color:var(--ok); }
+.bc-err .bn { color:var(--err); }
+.bc-pct .bn { color:var(--accent); }
+
+/* Cert bar */
+.cert-bar {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px 22px;
+  margin-bottom:26px; display:flex; align-items:flex-start;
+  gap:16px; text-align:left;
+}
+.cert-icon { font-size:2rem; flex-shrink:0; }
+.cert-bar h4 { font-size:.9rem; font-weight:700; margin-bottom:5px; color:var(--accent); }
+.cert-bar p { font-size:.84rem; color:var(--text-muted); line-height:1.6; }
+
+/* Review list */
+.review-section { text-align:left; margin-bottom:30px; }
+.review-title {
+  font-size:.72rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--text-muted);
+  margin-bottom:14px; padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:8px;
+}
+.review-title::before { content:''; display:block; width:10px; height:2px; background:var(--accent); border-radius:2px; }
+
+.review-items { display:flex; flex-direction:column; gap:8px; }
+.ri {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:12px 14px;
+  display:flex; align-items:flex-start; gap:12px; font-size:.83rem;
+}
+.ri-dot {
+  width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px;
+}
+.ri-dot.right { background:var(--ok); box-shadow:0 0 6px var(--ok-bg); }
+.ri-dot.wrong  { background:var(--err); box-shadow:0 0 6px var(--err-bg); }
+.ri-q { flex:1; line-height:1.5; }
+.ri-q strong { color:var(--text); }
+.ri-correct-ans { color:var(--ok); font-size:.78rem; font-weight:600; }
+.ri-ans { color:var(--text-muted); font-size:.78rem; white-space:nowrap; }
+
+/* Result actions */
+.result-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-restart {
+  background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+  color:#0a0a0a; border:none; border-radius:var(--radius-pill);
+  padding:14px 40px; font-family:var(--font-body); font-size:.95rem; font-weight:700;
+  cursor:pointer; transition:transform var(--dur), box-shadow var(--dur), filter var(--dur);
+  box-shadow:0 4px 24px var(--accent-glow);
+}
+.btn-restart:hover { transform:translateY(-2px); filter:brightness(1.07); }
+
+.btn-review-toggle {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--radius-pill); padding:14px 32px;
+  font-size:.95rem; font-weight:600; cursor:pointer; color:var(--text);
+  transition:border-color var(--dur), background var(--dur);
+}
+.btn-review-toggle:hover { border-color:var(--accent); background:var(--accent-bg); }
+
+/* ═══════════════════════════════════════════
+   17. RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:600px){
+  .welcome-card, .q-card { padding:22px 18px; }
+  .breakdown-grid { grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .bc .bn { font-size:1.3rem; }
+  .result-actions { flex-direction:column; align-items:center; }
+  .btn-restart, .btn-review-toggle { width:100%; text-align:center; }
+  #custom-panel { width:92vw; }
+  .theme-grid { grid-template-columns:repeat(2,1fr); }
+  .intro-title { font-size:clamp(2rem,8vw,3.5rem); }
+  .stats-row { gap:8px; }
+  .stat-pill { padding:10px 12px; }
+}
+
+/* ═══════════════════════════════════════════
+   18. SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border-h); border-radius:10px; }
+::-webkit-scrollbar-thumb:hover { background:var(--text-muted); }
+</style>
+</head>
+<body data-theme="dark" data-font="playfair" data-card="rounded" data-size="md" class="bg-mesh">
+
+<!-- ── CONFETTI ── -->
+<div id="confetti-container"></div>
+
+<!-- ── CUSTOMIZATION PANEL ── -->
+<div id="panel-overlay"></div>
+<div id="custom-panel">
+  <div class="panel-head">
+    <div>
+      <h3>Customize ✦</h3>
+      <span>Personalize your quiz</span>
+    </div>
+    <button class="btn-close-panel" id="btn-close-panel" title="Close">✕</button>
+  </div>
+
+  <!-- Themes -->
+  <div class="panel-section">
+    <div class="ps-title">Theme</div>
+    <div class="theme-grid">
+      <div class="theme-card active" data-theme-id="dark">
+        <div class="swatch" style="background:radial-gradient(circle at 40% 40%, #2a2010, #080b12)"></div>
+        <span>Midnight</span>
+      </div>
+      <div class="theme-card" data-theme-id="light">
+        <div class="swatch" style="background:radial-gradient(circle at 40% 40%, #dce8ff, #f4f7fd)"></div>
+        <span>Arctic</span>
+      </div>
+      <div class="theme-card" data-theme-id="purple">
+        <div class="swatch" style="background:radial-gradient(circle at 40% 40%, #2a1060, #0d091a)"></div>
+        <span>Neon</span>
+      </div>
+      <div class="theme-card" data-theme-id="ocean">
+        <div class="swatch" style="background:radial-gradient(circle at 40% 40%, #0d3a50, #020f18)"></div>
+        <span>Ocean</span>
+      </div>
+      <div class="theme-card" data-theme-id="forest">
+        <div class="swatch" style="background:radial-gradient(circle at 40% 40%, #0d2a15, #050f08)"></div>
+        <span>Forest</span>
+      </div>
+      <div class="theme-card" data-theme-id="sunset">
+        <div class="swatch" style="background:radial-gradient(circle at 40% 40%, #3a1020, #120508)"></div>
+        <span>Sunset</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accent Color -->
+  <div class="panel-section">
+    <div class="ps-title">Accent Color</div>
+    <div class="accent-grid">
+      <div class="accent-swatch active" data-accent="gold"    style="background:#e8b84b" title="Gold"></div>
+      <div class="accent-swatch"        data-accent="blue"    style="background:#5b9cf6" title="Blue"></div>
+      <div class="accent-swatch"        data-accent="purple"  style="background:#b06ef3" title="Purple"></div>
+      <div class="accent-swatch"        data-accent="cyan"    style="background:#22d3ee" title="Cyan"></div>
+      <div class="accent-swatch"        data-accent="green"   style="background:#4ade80" title="Green"></div>
+      <div class="accent-swatch"        data-accent="rose"    style="background:#fb7185" title="Rose"></div>
+      <div class="accent-swatch"        data-accent="orange"  style="background:#fb923c" title="Orange"></div>
+      <div class="accent-swatch"        data-accent="teal"    style="background:#2dd4bf" title="Teal"></div>
+      <div class="accent-swatch"        data-accent="indigo"  style="background:#818cf8" title="Indigo"></div>
+      <div class="accent-swatch"        data-accent="yellow"  style="background:#facc15" title="Yellow"></div>
+      <div class="accent-swatch"        data-accent="pink"    style="background:#e879f9" title="Pink"></div>
+      <div class="accent-swatch"        data-accent="lime"    style="background:#a3e635" title="Lime"></div>
+    </div>
+  </div>
+
+  <!-- Font Pairing -->
+  <div class="panel-section">
+    <div class="ps-title">Font Pairing</div>
+    <div class="font-grid">
+      <div class="font-btn active" data-font-id="playfair">
+        <div class="fb-display" style="font-family:'Playfair Display',serif">Playfair</div>
+        <div class="fb-body">+ DM Sans — Editorial</div>
+      </div>
+      <div class="font-btn" data-font-id="bebas">
+        <div class="fb-display" style="font-family:'Bebas Neue',sans-serif;letter-spacing:.05em">BEBAS</div>
+        <div class="fb-body">+ Inter — Bold</div>
+      </div>
+      <div class="font-btn" data-font-id="raleway">
+        <div class="fb-display" style="font-family:'Raleway',sans-serif">Raleway</div>
+        <div class="fb-body">+ Nunito — Friendly</div>
+      </div>
+      <div class="font-btn" data-font-id="space">
+        <div class="fb-display" style="font-family:'Space Mono',monospace;font-size:.8rem">SPACE MONO</div>
+        <div class="fb-body">+ Sora — Techy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Style -->
+  <div class="panel-section">
+    <div class="ps-title">Card Style</div>
+    <div class="seg-row">
+      <button class="seg-btn active" data-card-id="rounded">⬭ Rounded</button>
+      <button class="seg-btn" data-card-id="sharp">▢ Sharp</button>
+      <button class="seg-btn" data-card-id="glass">◈ Glass</button>
+    </div>
+  </div>
+
+  <!-- Background -->
+  <div class="panel-section">
+    <div class="ps-title">Background</div>
+    <div class="seg-row">
+      <button class="seg-btn active" data-bg-id="bg-mesh">✦ Glow</button>
+      <button class="seg-btn" data-bg-id="bg-grid">⊞ Grid</button>
+      <button class="seg-btn" data-bg-id="bg-dots">∷ Dots</button>
+    </div>
+  </div>
+
+  <!-- Animations -->
+  <div class="panel-section">
+    <div class="ps-title">Animations</div>
+    <div class="seg-row">
+      <button class="seg-btn" data-anim-id="anim-fast">⚡ Fast</button>
+      <button class="seg-btn active" data-anim-id="">◎ Normal</button>
+      <button class="seg-btn" data-anim-id="anim-slow">🌀 Slow</button>
+      <button class="seg-btn" data-anim-id="anim-off">✕ Off</button>
+    </div>
+  </div>
+
+  <!-- Text Size -->
+  <div class="panel-section">
+    <div class="ps-title">Text Size</div>
+    <div class="seg-row">
+      <button class="seg-btn" data-size-id="sm">A- Small</button>
+      <button class="seg-btn active" data-size-id="md">A  Medium</button>
+      <button class="seg-btn" data-size-id="lg">A+ Large</button>
+    </div>
+    <button class="btn-panel-reset" id="btn-reset-prefs">↺ Reset to Defaults</button>
+  </div>
+</div>
+
+<!-- ── GEAR BUTTON ── -->
+<button id="gear-btn" title="Customize appearance">⚙</button>
+
+<!-- ════════════════════════════════════════
+     INTRO SCREEN
+════════════════════════════════════════ -->
+<div id="intro-screen">
+  <div class="ig ig1"></div>
+  <div class="ig ig2"></div>
+  <div class="ig ig3"></div>
+  <div class="wp-particles" id="wp-particles"></div>
+
+  <div class="intro-center">
+    <div class="intro-badge">
+      <div class="badge-dot"></div>
+      WordPress Certification Prep
+    </div>
+
+    <div class="intro-wp-icon">🌐</div>
+
+    <h1 class="intro-title">WordPress<br>Mastery Quiz</h1>
+
+    <div class="intro-divider"><div class="d"></div></div>
+
+    <p class="intro-sub">
+      An interactive quiz platform for learning WordPress — customizable, engaging, and built for every learner.
+    </p>
+
+    <div class="intro-name-wrap">
+      <label for="intro-player-name">What's your name?</label>
+      <input
+        type="text"
+        id="intro-player-name"
+        class="intro-name-input"
+        placeholder="Enter your name…"
+        maxlength="40"
+        autocomplete="off"
+      />
+      <div class="intro-name-error" id="intro-name-error">⚠ Please enter your name to continue.</div>
+    </div>
+
+    <button class="btn-intro" onclick="dismissIntro()">
+      Let's Go <span class="btn-arrow">→</span>
+    </button>
+
+    <p class="intro-hint">Press <kbd style="font-family:monospace;background:rgba(255,255,255,.1);padding:2px 7px;border-radius:4px;font-size:.8em">Enter</kbd> to continue</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- ── WELCOME ── -->
+  <div id="welcome-screen" class="screen" style="padding-top:50px;padding-bottom:80px;width:100%">
+    <div class="welcome-card">
+      <div class="welcome-logo">WordPress Mastery Quiz</div>
+      <h1 id="welcome-heading">Ready to Test<br>Your Knowledge?</h1>
+      <p class="sub" id="welcome-sub">Challenge yourself with this interactive WordPress quiz. Each session is uniquely shuffled. Hints and detailed explanations are included for every question.</p>
+
+      <div id="no-q-warning">
+        <strong>📋 No questions loaded yet</strong>
+        Add questions to the <code>ALL_QUESTIONS</code> array in the <code>&lt;script&gt;</code> block to enable the quiz. Each question needs: <code>topic</code>, <code>text</code>, <code>options</code>, <code>correct</code>, <code>hint</code>, and <code>explanation</code>.
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill"><div class="sn" id="stat-total">0</div><div class="sl">Questions</div></div>
+        <div class="stat-pill"><div class="sn">10</div><div class="sl">pts each</div></div>
+        <div class="stat-pill"><div class="sn">💡</div><div class="sl">Hints</div></div>
+        <div class="stat-pill"><div class="sn">∞</div><div class="sl">Retries</div></div>
+      </div>
+
+      <button class="btn-start" id="btn-start" onclick="startQuiz()">Start Quiz →</button>
+
+      <div class="tip-box">
+        <strong>How it works:</strong> Questions are shuffled every session. Select your answer(s) — some questions allow multiple selections. Use the 💡 hint before answering. After submitting, you'll see a full explanation.
+        <div class="shortcuts">
+          <div class="sc"><kbd>1–6</kbd> Select option</div>
+          <div class="sc"><kbd>H</kbd> Show hint</div>
+          <div class="sc"><kbd>Enter</kbd> Submit / Next</div>
+          <div class="sc"><kbd>⚙</kbd> Customize UI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="quiz-screen" class="screen" style="width:100%">
+    <div class="top-bar">
+      <div class="q-counter">Q <span id="q-num">1</span> / <span id="q-total">0</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="score-badge">Score <span class="pts" id="live-score">0</span></div>
+    </div>
+
+    <div class="q-card" id="q-card">
+      <div class="q-meta">
+        <span class="q-topic" id="q-topic">Topic</span>
+        <span class="multi-tag" id="multi-tag" style="display:none">Multi-select</span>
+        <span class="q-num-badge">#<span id="q-num2">1</span></span>
+      </div>
+
+      <div class="q-text" id="q-text">Loading question…</div>
+      <div class="q-context" id="q-context"></div>
+      <div class="options-grid" id="options-grid"></div>
+
+      <div class="actions-row">
+        <button class="btn-hint" id="btn-hint" onclick="showHint()">💡 Hint</button>
+        <button class="btn-submit" id="btn-submit" disabled onclick="submitAnswer()">Submit Answer</button>
+        <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next</button>
+      </div>
+
+      <div class="hint-panel" id="hint-panel"></div>
+      <div class="exp-panel" id="exp-panel">
+        <div class="exp-head" id="exp-head"></div>
+        <div id="exp-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div id="result-screen" class="screen" style="width:100%">
+    <div class="result-header">
+      <div class="player-banner" id="player-banner">Player</div><br>
+      <div class="timestamp" id="timestamp"></div>
+    </div>
+
+    <div class="score-ring-wrap">
+      <div class="score-ring">
+        <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="68" fill="none" stroke="var(--border)" stroke-width="6"/>
+          <circle id="result-arc" cx="80" cy="80" r="68" fill="none"
+            stroke="var(--accent)" stroke-width="6" stroke-linecap="round"
+            stroke-dasharray="427" stroke-dashoffset="427"/>
+        </svg>
+        <div class="sn" id="final-score-num">0</div>
+        <div class="sd" id="final-score-denom">/ 0</div>
+      </div>
+    </div>
+
+    <h2 id="result-title">Well done!</h2>
+    <p class="result-sub" id="result-sub">Quiz complete.</p>
+
+    <div class="breakdown-grid">
+      <div class="bc bc-ok"> <div class="bn" id="bc-correct">0</div><div class="bl">Correct</div></div>
+      <div class="bc bc-err"><div class="bn" id="bc-wrong">0</div>  <div class="bl">Wrong</div></div>
+      <div class="bc bc-pct"><div class="bn" id="bc-pct">0%</div>   <div class="bl">Score</div></div>
+    </div>
+
+    <div class="cert-bar" id="cert-bar"></div>
+
+    <div class="result-actions" style="margin-bottom:28px">
+      <button class="btn-restart" onclick="restartQuiz()">↺ Try Again</button>
+      <button class="btn-review-toggle" onclick="toggleReview()">📋 Review Answers</button>
+    </div>
+
+    <div class="review-section" id="review-section" style="display:none">
+      <div class="review-title">Answer Review</div>
+      <div class="review-items" id="review-items"></div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+/* ══════════════════════════════════════════════
+   QUESTIONS — Add your questions here.
+   Each object supports:
+     topic      : string  — label shown on the card
+     text       : string  — the question body
+     options    : array   — answer choices (2–6 items)
+     correct    : array   — indices of correct answers (0-based)
+     multi      : bool    — true = multiple correct answers
+     hint       : string  — shown before answer
+     explanation: string  — shown after answer
+     context    : string  — (optional) extra context block
+══════════════════════════════════════════════ */
+const ALL_QUESTIONS = [
+  {
+    topic: "WordPress",
+    text: "Identify the correct sequence of actions to guide the iterative workflow in WordPress with AI assistance. Select all valid options.",
+    multi: true,
+    options: [
+      "Publish directly without staging",
+      "Generate first drafts with AI-driven templates",
+      "Iteratively refine content using AI evaluations",
+      "Perform final tests and improvements in a staging environment",
+      "Ignore AI feedback if initial draft looks complete"
+    ],
+    correct: [1, 2, 3],
+    hint: "Look for steps that involve AI assistance, iteration, and safe testing before going live.",
+    explanation: "An effective AI-assisted workflow starts with AI-generated drafts, then iterative refinement using AI feedback, and finally testing in a staging environment before publishing. Direct publishing or ignoring feedback increases risk."
+  },
+  {
+    "topic": "Prompt Engineering",
+    "text": "As a WordPress site manager developing guidelines for content creators, identify which elements make a prompt effective in directing content style and substance.",
+    "multi": true,
+    "options": [
+      "Clear and concise objectives",
+      "Excessively detailed technical jargon",
+      "Contextual background information",
+      "Open-ended questions to encourage creativity"
+    ],
+    "correct": [0, 2],
+    "hint": "Focus on clarity and providing useful context.",
+    "explanation": "Effective prompts include clear objectives and relevant background information to guide content direction. Overly technical jargon can confuse contributors, and while open-ended questions can help creativity, they may reduce consistency when strict guidelines are needed."
+  },
+  {
+    "topic": "WordPress Performance",
+    "text": "Why is it important to resize and compress media before uploading it to WordPress? Select all that apply.",
+    "multi": true,
+    "options": [
+      "None of the above",
+      "To conserve server resources",
+      "To ensure the media files are web-friendly",
+      "To improve website loading times"
+    ],
+    "correct": [1, 2, 3],
+    "hint": "Think performance and efficiency benefits.",
+    "explanation": "Resizing and compressing media reduces file sizes, which conserves server resources, ensures compatibility with web delivery, and improves page load speeds—leading to better user experience and SEO outcomes."
+  },
+  {
+    "topic": "WordPress Design",
+    "text": "Identify the key elements that should be considered when designing block patterns in WordPress. Select all that apply.",
+    "multi": true,
+    "options": [
+      "Avoid considering user experience",
+      "Prioritize responsive design",
+      "Ensure patterns are easy to customize",
+      "Focus solely on desktop layouts"
+    ],
+    "correct": [1, 2],
+    "hint": "Think flexibility and usability across devices.",
+    "explanation": "Good block pattern design prioritizes responsiveness and ease of customization to support a wide range of users and devices. Ignoring user experience or focusing only on desktop layouts limits effectiveness and accessibility."
+  },
+  {
+    "topic": "WordPress Basics",
+    "text": "What is a permalink in WordPress?",
+    "multi": true,
+    "options": [
+      "It is a URL that is intended to remain unchanged for many years",
+      "It is the first part of your URL that contains the protocol and domain name",
+      "It is the full URL used for any given post, page, or other content on your site",
+      "It is the last part of the URL and refers to the specific page being requested"
+    ],
+    "correct": [0, 2],
+    "hint": "Focus on the definition of a stable, complete URL for content.",
+    "explanation": "A permalink is a permanent URL intended to remain unchanged and represents the full URL of a post, page, or content item. It is not just a portion of the URL like the domain or slug alone."
+  },
+  {
+    "topic": "SEO",
+    "text": "When using AI applications in WordPress, what SEO and performance optimization practices should be considered? Select all that apply.",
+    "multi": true,
+    "options": [
+      "Avoid expanding site load with redundant AI markup",
+      "Optimize AI content with distinct and strategic meta tags",
+      "Evaluate site's Core Web Vitals to gauge AI impact on performance",
+      "Ensure all AI-generated media is compressed before use on the site"
+    ],
+    "correct": [0, 1, 2, 3],
+    "hint": "All listed practices help maintain performance and SEO quality.",
+    "explanation": "All options are valid: avoiding unnecessary markup improves load speed, optimizing meta tags enhances SEO visibility, monitoring Core Web Vitals tracks performance impact, and compressing AI-generated media helps maintain fast page load times."
+  },
+  {
+    "topic": "WordPress Management",
+    "text": "Select the statements that correctly describe the importance of crafting effective prompts in WordPress management.",
+    "multi": true,
+    "options": [
+      "They enable consistent output across various content contributors",
+      "They guarantee the first position in search engine results",
+      "They aid in streamlining content management workflows",
+      "They eliminate the need for backup solutions"
+    ],
+    "correct": [0, 2],
+    "hint": "Focus on consistency and workflow improvements.",
+    "explanation": "Effective prompts help ensure consistent output across contributors and streamline content workflows. They do not guarantee SEO rankings or replace essential practices like maintaining backup solutions."
+  },
+  {
+    "topic": "WordPress Optimization",
+    "text": "Why is prompt crafting significant in optimizing WordPress management? Select all correct answers.",
+    "multi": true,
+    "options": [
+      "It directly increases ad revenue",
+      "It reduces training time for new team members",
+      "It helps organize tasks and enhances productivity",
+      "It instantly boosts website analytics"
+    ],
+    "correct": [1, 2],
+    "hint": "Think efficiency and team productivity benefits.",
+    "explanation": "Well-crafted prompts reduce onboarding time and improve task organization, leading to higher productivity. They do not directly impact ad revenue or instantly improve analytics without other contributing factors."
+  },
+  {
+    "topic": "Web Design",
+    "text": "Which of the following considerations are crucial when identifying the target audience during the web design process in WordPress? Select all that apply.",
+    "multi": true,
+    "options": [
+      "Focusing solely on aesthetic appeal without functionality",
+      "Understanding demographics such as age and location",
+      "Ignoring accessibility and usability",
+      "Identifying user needs and design preferences"
+    ],
+    "correct": [1, 3],
+    "hint": "Focus on understanding users, not ignoring best practices.",
+    "explanation": "Understanding demographics and identifying user needs are essential to designing effective experiences. Ignoring usability or focusing only on aesthetics without functionality leads to poor design outcomes."
+  },
+  {
+    topic: "SEO",
+    text: "Which of the following are considered best practices when creating SEO titles and meta descriptions for WordPress posts and pages? Select all that apply.",
+    multi: true,
+    options: [
+      "Include primary keywords naturally",
+      "Limit the meta description to 160 characters",
+      "Focus on clickbait to improve CTR without relevance",
+      "Stuff as many keywords as possible"
+    ],
+    correct: [0, 1],
+    hint: "Keep it natural, relevant, and within character limits.",
+    explanation: "Best practices include using primary keywords naturally and keeping meta descriptions within 160 characters. Clickbait and keyword stuffing harm credibility and SEO rankings."
+  },
+  {
+    topic: "WordPress",
+    text: "Which two places are widgets usually displayed?",
+    multi: true,
+    options: [
+      "Sidebars",
+      "The Home Page",
+      "Footers",
+      "Headers"
+    ],
+    correct: [0, 2],
+    hint: "Think about the sides and bottom of a typical page layout.",
+    explanation: "Widgets in WordPress are most commonly displayed in sidebars and footers, which are designated widget-ready areas in most themes."
+  },
+  {
+    topic: "WordPress",
+    text: "Identify the page types that support effective user journeys in a WordPress site. Select all applicable page types.",
+    multi: true,
+    options: [
+      "Landing pages tailored to user goals",
+      "Pages with long, dense blocks of text without breaks",
+      "Blogs with relevant content and categories",
+      "Randomly structured pages without clear purpose"
+    ],
+    correct: [0, 2],
+    hint: "Effective user journeys need focused, organized content.",
+    explanation: "Landing pages tailored to user goals and well-organized blogs with relevant categories guide users through a site effectively. Dense unbroken text and purposeless pages create poor user experiences."
+  },
+  {
+    topic: "SEO",
+    text: "What strategies can be employed to optimize AI-generated content on WordPress sites for better SEO and performance? Select all that apply.",
+    multi: true,
+    options: [
+      "Avoid adding unnecessary code or scripts that contribute to page bloat",
+      "Analyze Core Web Vitals to monitor the impact of AI features",
+      "Regularly update and compress image files generated by AI",
+      "Include descriptive and unique meta descriptions for all AI content"
+    ],
+    correct: [0, 1, 2, 3],
+    hint: "All four are valid AI content optimization strategies.",
+    explanation: "All four strategies apply: avoiding bloated code keeps pages fast, monitoring Core Web Vitals tracks AI's performance impact, compressing images reduces load times, and unique meta descriptions improve search visibility."
+  },
+  {
+    topic: "WordPress",
+    text: "As a freelance WordPress developer creating guides for clients, determine the components that enhance the effectiveness of prompts when explaining website maintenance tasks.",
+    multi: true,
+    options: [
+      "Clear maintenance task definitions",
+      "Use of humor to lighten the mood",
+      "References to advanced WordPress functions",
+      "Simple language with no assumptions"
+    ],
+    correct: [0, 3],
+    hint: "Client guides need clarity and simplicity above all.",
+    explanation: "Effective maintenance guides use clear task definitions and simple language that assumes no prior knowledge. Humor and advanced technical references can confuse or alienate non-technical clients."
+  },
+  {
+    topic: "WordPress",
+    text: "For which of the following WordPress management tasks is it essential to seek human intervention instead of fully relying on AI? Select all that apply.",
+    multi: true,
+    options: [
+      "Responding to accessibility compliance queries",
+      "Automating daily backup procedures",
+      "Prepping and integrating high-stakes SEO strategies",
+      "Managing legal disclaimers and privacy policies",
+      "Scheduling future blog posts"
+    ],
+    correct: [0, 2, 3],
+    hint: "Compliance, legal, and high-stakes decisions need human judgment.",
+    explanation: "Accessibility compliance, high-stakes SEO strategies, and legal/privacy content all carry significant risk and require human expertise. Routine tasks like backups and post scheduling can be safely automated."
+  },
+  {
+    topic: "WordPress",
+    text: "In which of the following scenarios should a WordPress manager escalate to human expertise when using AI tools? Select all that apply.",
+    multi: true,
+    options: [
+      "Creating a simple blog post content using AI",
+      "Handling a complex security incident on the website",
+      "Managing basic user comments and feedback",
+      "Performing a site-wide accessibility audit",
+      "Updating legal and compliance-related content"
+    ],
+    correct: [1, 3, 4],
+    hint: "Escalate for security, compliance, and accessibility — not routine tasks.",
+    explanation: "Complex security incidents, site-wide accessibility audits, and legal/compliance content all require human judgment and expertise. Simple blog posts and basic comment management are routine tasks AI can handle."
+  },
+  {
+    topic: "SEO",
+    text: "AI-generated content in WordPress must be evaluated for SEO and accessibility. What steps should you take? Select all that apply.",
+    multi: true,
+    options: [
+      "Analyze the proper use of HTML tags for SEO",
+      "Ignore optimizing for accessibility if it looks fine visually",
+      "Rely solely on AI suggestions for optimizing content",
+      "Ensure all images have alt text for accessibility"
+    ],
+    correct: [0, 3],
+    hint: "Visual appearance doesn't guarantee accessibility or SEO compliance.",
+    explanation: "Proper HTML tag usage supports SEO, and all images need alt text for accessibility. Visual appearance alone is not sufficient — accessibility and SEO require deliberate evaluation."
+  },
+  {
+    topic: "SEO",
+    text: "Identify best practices for managing the performance impact of AI tools in WordPress with an eye towards SEO. Select all that apply.",
+    multi: true,
+    options: [
+      "Monitor performance metrics for any negative impacts by AI features",
+      "Minimize the use of bulky AI scripts within the site's code",
+      "Ensure that AI content provides value with unique titles and metas",
+      "Implement image optimization techniques for AI-generated visuals"
+    ],
+    correct: [0, 1, 2, 3],
+    hint: "All four are valid AI performance and SEO best practices.",
+    explanation: "All four practices are advisable: monitoring metrics catches performance issues, minimizing scripts reduces load, unique titles and metas boost SEO, and image optimization improves both speed and search visibility."
+  },
+  {
+    topic: "SEO",
+    text: "Which practices help integrate both performance optimization and SEO considerations in WordPress web design? Select all that apply.",
+    multi: true,
+    options: [
+      "Including meta descriptions that summarize page content",
+      "Favoring dynamically generated content over preloaded",
+      "Ignoring mobile responsiveness",
+      "Optimizing images for faster load times"
+    ],
+    correct: [0, 3],
+    hint: "SEO and performance both benefit from metadata and fast images.",
+    explanation: "Meta descriptions improve search visibility while image optimization directly improves load times — both are key to balancing SEO and performance. Mobile responsiveness should never be ignored."
+  },
+  {
+    topic: "WordPress",
+    text: "Which of the following steps are typically included in an iterative workflow when managing a WordPress site using AI tools? Select all that apply.",
+    multi: true,
+    options: [
+      "Create and test variations in a staging environment",
+      "Directly publish content without reviewing",
+      "Request feedback from AI tools and refine content",
+      "Test changes in a live environment immediately",
+      "Draft content using AI suggestions"
+    ],
+    correct: [0, 2, 4],
+    hint: "Iterate in staging, not live — draft, feedback, refine.",
+    explanation: "A proper iterative workflow involves drafting content with AI, requesting AI feedback to refine it, and testing variations in a staging environment before publishing — never pushing directly to a live site."
+  },
+  {
+    topic: "WordPress Themes",
+    text: "Why is prompt crafting crucial when customizing a theme in WordPress? Choose all applicable.",
+    multi: true,
+    options: [
+      "To optimize the site for different user devices",
+      "To allow for dynamic content updates automatically",
+      "To personalize user experience with widgets and features",
+      "To ensure visual consistency across the site"
+    ],
+    correct: [0, 2, 3],
+    hint: "Prompt crafting guides device optimization, personalization, and consistency.",
+    explanation: "Effective prompt crafting when customizing a WordPress theme helps optimize the site across devices, personalize the user experience with widgets and features, and maintain visual consistency throughout the site."
+  },
+  {
+    topic: "WordPress",
+    text: "What are the critical components to focus on when planning a taxonomy (categories, tags) structure in WordPress? Select all that apply.",
+    multi: true,
+    options: [
+      "Include overlapping categories frequently",
+      "Ensure clarity and simplicity in categories",
+      "Use tags for more specific topics",
+      "Overuse tags for better SEO"
+    ],
+    correct: [1, 2],
+    hint: "Keep categories simple and tags specific — don't overdo either.",
+    explanation: "A good taxonomy structure uses clear and simple categories for broad grouping and specific tags for granular topics. Overlapping categories and tag overuse create confusion and hurt SEO."
+  },
+  {
+    topic: "WordPress",
+    text: "Evaluate which of these attributes make a WordPress prompt successful in conveying its intended task. Select all that apply.",
+    multi: true,
+    options: [
+      "Use of technical jargon",
+      "Dependence on assumed knowledge",
+      "Clarity of purpose",
+      "Outline key steps explicitly"
+    ],
+    correct: [2, 3],
+    hint: "Successful prompts are clear and explicit, not assumed.",
+    explanation: "A successful prompt has a clear purpose and outlines key steps explicitly. Relying on jargon or assumed knowledge reduces clarity and increases the chance of misunderstanding."
+  },
+  {
+    topic: "Web Accessibility",
+    text: "When designing a WordPress website, which methodologies best balance aesthetics and accessibility? Select all methodologies that properly achieve this balance.",
+    multi: true,
+    options: [
+      "Employ high contrast colors for better readability",
+      "Use decorative fonts without considering readability",
+      "Incorporate alt text for all images",
+      "Make aesthetic decisions based purely on trends"
+    ],
+    correct: [0, 2],
+    hint: "Accessibility requires readable contrast and descriptive alt text.",
+    explanation: "High contrast colors improve readability for visually impaired users, and alt text ensures images are accessible. Decorative fonts that hurt readability and purely trend-driven decisions sacrifice accessibility for aesthetics."
+  },
+  {
+    topic: "WordPress",
+    text: "When reviewing AI-generated content in WordPress, which actions should be taken to ensure it is free from plagiarism and licensing issues? Select all that apply.",
+    multi: true,
+    options: [
+      "Run a plagiarism check on the content",
+      "Publish content without a review since it was AI-generated",
+      "Assume the AI has generated unique content by default",
+      "Verify citations and references for licensing compliance"
+    ],
+    correct: [0, 3],
+    hint: "AI content still needs verification before publishing.",
+    explanation: "AI-generated content should always be run through a plagiarism checker and have its citations verified for licensing compliance — it cannot be assumed to be original or properly licensed by default."
+  },
+  {
+    topic: "WordPress",
+    text: "What are the advantages of using detailed prompts in the management of a WordPress website? Select all that apply.",
+    multi: true,
+    options: [
+      "They increase site security without additional measures",
+      "They ensure tasks are completed on time by following detailed guidance",
+      "They automatically enhance the site's visual design",
+      "They facilitate seamless coordination between different departments"
+    ],
+    correct: [1, 3],
+    hint: "Detailed prompts improve process and communication, not design or security directly.",
+    explanation: "Detailed prompts help ensure tasks follow clear guidance and are completed on time, and they improve coordination across departments by providing consistent instructions."
+  },
+  {
+    topic: "WordPress Design",
+    text: "In the context of WordPress design, how should content hierarchy be determined to enhance user experience and engagement? Select all accurate strategies.",
+    multi: true,
+    options: [
+      "Focus only on SEO keywords placement",
+      "Place the most visually attractive elements first, regardless of importance",
+      "Organize information based on user value and priorities",
+      "Use headings, subheadings, and bullet points to create structure"
+    ],
+    correct: [2, 3],
+    hint: "Structure content around what matters to the user.",
+    explanation: "Content hierarchy should prioritize user value and use structural elements like headings and bullet points to guide readers through the content logically and clearly."
+  },
+  {
+    topic: "WordPress",
+    text: "Which of the following are valid WordPress shortcodes? Select all that apply.",
+    multi: true,
+    options: [
+      "[myshortcode]",
+      "(myshortcode)",
+      "[myshortcode]CONTENT[/myshortcode]",
+      "<myshortcode></myshortcode>"
+    ],
+    correct: [0, 2],
+    hint: "WordPress shortcodes use square brackets.",
+    explanation: "Valid WordPress shortcodes use square bracket syntax: a self-closing [myshortcode] or a wrapping [myshortcode]CONTENT[/myshortcode]. Parentheses and HTML-style tags are not valid shortcode formats."
+  },
+  {
+    topic: "WordPress Security",
+    text: "To improve the security and performance of AI-generated code in WordPress, what measures should be undertaken? Select all that apply.",
+    multi: true,
+    options: [
+      "Optimize code for faster loading times",
+      "Ignore security checks for AI-generated code",
+      "Depend on AI for indefinite code optimization",
+      "Review code for potential security vulnerabilities"
+    ],
+    correct: [0, 3],
+    hint: "AI code still needs human review and optimization.",
+    explanation: "AI-generated code should be optimized for performance and manually reviewed for security vulnerabilities — it should never be assumed safe or permanently self-optimizing."
+  },
+  {
+    topic: "WordPress Security",
+    text: "To ensure compliance with standards, which checks should be performed on AI-generated schema and HTML code in WordPress? Select all that apply.",
+    multi: true,
+    options: [
+      "Validate code only when facing a display issue",
+      "Check schema markup for correct implementation",
+      "Validate HTML code for structural integrity",
+      "Assume AI knows the best practices without validation"
+    ],
+    correct: [1, 2],
+    hint: "Always validate — don't assume AI-generated code is correct.",
+    explanation: "Schema markup should be checked for correct implementation and HTML should be validated for structural integrity. AI-generated code should never be assumed compliant without verification."
+  },
+  {
+    topic: "WordPress Security",
+    text: "In the context of WordPress security, why does crafting prompts matter? Select all that apply.",
+    multi: true,
+    options: [
+      "To reduce the vulnerability to script attacks",
+      "To assist in making informative security dashboards",
+      "To create robust security configurations",
+      "To enable faster loading of multimedia content"
+    ],
+    correct: [0, 1, 2],
+    hint: "Good prompts improve security outcomes in multiple ways.",
+    explanation: "Crafting effective prompts matters for security because it helps reduce script attack vulnerabilities, enables the creation of informative security dashboards, and supports building robust security configurations."
+  },
+  {
+    topic: "WordPress",
+    text: "When integrating AI tools in your WordPress content creation process, which steps correctly describe an iterative workflow? Choose all applicable options.",
+    multi: true,
+    options: [
+      "Finalize content with a quality check in production",
+      "Solicit AI-based critiques for improvement",
+      "Skip testing drafts in a staging area",
+      "Start with an outline generated by AI",
+      "Refine based on feedback and version control"
+    ],
+    correct: [1, 3, 4],
+    hint: "Iterate: outline, critique, then refine.",
+    explanation: "An iterative AI workflow should begin with an AI-generated outline, use AI critiques to improve drafts, and refine content through feedback and version control before publishing."
+  },
+  {
+    topic: "WordPress Media",
+    text: "Which of the following practices are recommended for writing alt-text for images in WordPress? Select all that apply.",
+    multi: true,
+    options: [
+      "Use keywords where they fit naturally",
+      "Use irrelevant keywords to improve SEO",
+      "Leave alt-text empty if the image is purely decorative",
+      "Describe the image accurately and succinctly"
+    ],
+    correct: [0, 2, 3],
+    hint: "Alt-text should be accurate and only keyword-relevant.",
+    explanation: "Good alt-text describes the image accurately and concisely, uses keywords only where they fit naturally, and is left empty for purely decorative images so screen readers can skip them."
+  },
+  {
+    topic: "WordPress",
+    text: "Select the features that contribute to direct and concise WordPress content instructions.",
+    multi: true,
+    options: [
+      "Unstructured narrative",
+      "Overload with unrelated information",
+      "Focus on a single task",
+      "Use of examples for clarity"
+    ],
+    correct: [2, 3],
+    hint: "Concise instructions are focused and clear.",
+    explanation: "Direct and concise instructions focus on one task at a time and use examples to clarify expectations, avoiding unrelated information or unstructured narrative."
+  },
+  {
+    topic: "WordPress",
+    text: "When verifying AI-generated text in WordPress, how should you confirm the accuracy of names, dates, and hyperlinks? Select all that apply.",
+    multi: true,
+    options: [
+      "Cross-check names with reliable sources",
+      "Assume all AI-generated facts are correct without checking",
+      "Confirm the validity of all hyperlinks",
+      "Verify the accuracy of dates mentioned"
+    ],
+    correct: [0, 2, 3],
+    hint: "Never trust AI facts without verifying them.",
+    explanation: "AI-generated content must be verified by cross-checking names against reliable sources, confirming all hyperlinks are valid, and verifying that all dates are accurate."
+  },
+  {
+    "topic": "WordPress",
+    "text": "Identify the true benefits of using well-crafted prompts when managing tasks within WordPress. Select all that apply.",
+    "multi": true,
+    "options": [
+      "They directly integrate social media platforms",
+      "They provide detailed instructions, reducing errors",
+      "They enable the use of complex plugins effortlessly",
+      "They ensure uniformity in content creation"
+    ],
+    "correct": [1, 3],
+    "hint": "Well-crafted prompts clarify tasks and reduce ambiguity.",
+    "explanation": "Detailed instructions help reduce errors, and clear prompts ensure consistent content creation. Integrating social media or enabling complex plugins are not direct benefits of prompt crafting."
+  },
+  {
+    "topic": "WordPress",
+    "text": "Select all that apply: Why is prompt crafting important when configuring an SEO plugin on a WordPress site?",
+    "multi": true,
+    "options": [
+      "To gain higher page rankings",
+      "For better aesthetic design of the site",
+      "To provide more engaging content descriptions",
+      "To ensure accurate keyword targeting"
+    ],
+    "correct": [0, 2, 3],
+    "hint": "SEO focuses on rankings, content quality, and keywords, not on visual design.",
+    "explanation": "Prompt crafting helps achieve higher rankings, write engaging meta descriptions, and target keywords accurately. Aesthetic design is unrelated to SEO plugin configuration."
+  },
+  {
+    "topic": "WordPress",
+    "text": "As a WordPress expert tasked with instructing a team of junior developers on creating custom post types, select the elements that are essential for an effective instructional prompt.",
+    "multi": true,
+    "options": [
+      "Clearly defined goal or output",
+      "Specific target audience",
+      "Detailed explanation of every erroneous possibility",
+      "Vague language to allow flexibility"
+    ],
+    "correct": [0, 1],
+    "hint": "Effective prompts are clear, goal-oriented, and tailored to the audience.",
+    "explanation": "A clear goal and knowing the target audience (junior developers) are essential. Listing every error is impractical, and vague language leads to confusion."
+  },
+  {
+    "topic": "WordPress",
+    "text": "Which WordPress tasks should be escalated to human experts for best results? Identify the tasks from the following options. Select all that apply.",
+    "multi": true,
+    "options": [
+      "Implementing custom newsletter scripts",
+      "Updating site logos and branding",
+      "Troubleshooting severe website security issues",
+      "Evaluating and implementing payment system updates",
+      "Automatically categorizing new posts"
+    ],
+    "correct": [0, 2, 3],
+    "hint": "Complex, security‑sensitive, or payment‑related tasks require human expertise.",
+    "explanation": "Custom scripts, severe security issues, and payment updates involve high risk or specialized knowledge. Logo updates and automatic categorization are often safe for automation or non‑experts."
+  },
+  {
+    "topic": "WordPress",
+    "text": "Identify which practices align with an effective iterative workflow using AI for WordPress content creation. Select all that apply.",
+    "multi": true,
+    "options": [
+      "Start with AI-based content outlines",
+      "Always integrate AI feedback for improvements",
+      "Refine versions using iterative testing",
+      "Ignore AI recommendations in content refinement",
+      "Deploy changes directly without staging"
+    ],
+    "correct": [0, 1, 2],
+    "hint": "Iterative workflows involve AI‑assisted planning, feedback, and testing – never ignoring AI or skipping staging.",
+    "explanation": "Starting with AI outlines, integrating AI feedback, and iterative testing are core to an effective AI workflow. Ignoring AI recommendations and deploying without staging are counterproductive."
+  },
+  {
+    "topic": "WordPress",
+    "text": "Which of the following are reasons why well-crafted prompts are essential in managing a WordPress website effectively? Select all that apply.",
+    "multi": true,
+    "options": [
+      "They increase overall website traffic immediately",
+      "They help ensure clear communication with team members",
+      "They reduce guesswork and confusion in task execution",
+      "They automate SEO processes"
+    ],
+    "correct": [1, 2],
+    "hint": "Prompts improve communication and task clarity, but they don't directly boost traffic or automate SEO.",
+    "explanation": "Well-crafted prompts clarify instructions, reducing guesswork and team confusion. They do not instantly increase traffic nor replace SEO automation tools."
+  },
+  {
+    topic: "WordPress",
+    text: "Which of the following are key components of an effective prompt in WordPress site management? Select all that apply.",
+    multi: true,
+    options: [
+      "Clear and specific instructions",
+      "Vague and open-ended questions",
+      "Multiple objectives in one prompt",
+      "Relevant context and examples"
+    ],
+    correct: [0, 3],
+    hint: "Effective prompts are specific, focused, and contextualized.",
+    explanation: "Effective prompts include clear and specific instructions along with relevant context and examples. Vague questions and multiple objectives in one prompt reduce clarity and effectiveness."
+  },
+  {
+    topic: "SEO",
+    text: "Considerations must be made for AI integration in WordPress to ensure optimal SEO and performance. Which of the following are advisable strategies? Select all that apply.",
+    multi: true,
+    options: [
+      "Leverage image compression tools for AI-generated images",
+      "Use comprehensive and unique meta tags for AI-enhanced pages",
+      "Limit the inclusion of excessive AI scripts to avoid site slowdown",
+      "Continuously measure Core Web Vitals to track AI influence"
+    ],
+    correct: [0, 1, 2, 3],
+    hint: "All four options are valid AI-SEO best practices.",
+    explanation: "All four strategies are advisable: compressing images improves load times, unique meta tags boost SEO, limiting scripts prevents slowdowns, and monitoring Core Web Vitals helps track AI's impact on performance."
+  },
+  {
+    topic: "WordPress",
+    text: "Which of the following steps should be included in a quality assurance checklist before publishing WordPress content? Select all that apply.",
+    multi: true,
+    options: [
+      "Review SEO settings thoroughly",
+      "Ignore image alt-text presence",
+      "Ensure consistent formatting",
+      "Check for broken links"
+    ],
+    correct: [0, 2, 3],
+    hint: "QA covers SEO, formatting, and functional checks.",
+    explanation: "A pre-publishing QA checklist should include reviewing SEO settings, ensuring consistent formatting, and checking for broken links. Alt-text should never be ignored as it is important for accessibility and SEO."
+  },
+  {
+    topic: "WordPress Media",
+    text: "What happens to a media file when you delete it from the Media Library in WordPress? Select all that apply.",
+    multi: true,
+    options: [
+      "The media file will appear as a broken link icon on all posts or pages where it was used",
+      "The media file is moved to the trash folder and can be restored later",
+      "The media file is permanently deleted from WordPress",
+      "The media file remains in the Media Library but is marked as deleted"
+    ],
+    correct: [0, 2],
+    hint: "Deletion in WordPress Media Library is permanent.",
+    explanation: "When a media file is deleted from the WordPress Media Library, it is permanently removed and will appear as a broken link wherever it was previously used in posts or pages."
+  },
+  {
+    topic: "WordPress",
+    text: "What qualities of a WordPress prompt effectively communicate task requirements? Select all correct options.",
+    multi: true,
+    options: [
+      "Broad unspecified instructions",
+      "Omitting key task details",
+      "Inclusive of required context",
+      "Conciseness in instruction"
+    ],
+    correct: [2, 3],
+    hint: "Good prompts are concise and include needed context.",
+    explanation: "Effective prompts include all required context so the task is understood, and are concise so instructions are easy to follow. Broad or incomplete instructions lead to poor outcomes."
+  },
+  {
+    topic: "WordPress Basics",
+    text: "Select all the statements that are true for WordPress (WP):",
+    multi: true,
+    options: [
+      "WP is a video streaming platform",
+      "WP is a CMS",
+      "WP is suitable for creating games",
+      "WP is an open-source system"
+    ],
+    correct: [1, 3],
+    hint: "Think about what WordPress is mainly designed to do and how it is licensed.",
+    explanation: "WordPress is a Content Management System (CMS) that is open-source. It is not a video streaming platform, and while it can be extended, it is not primarily designed for creating games."
+  },
+  {
+    topic: "WordPress Prompts",
+    text: "As a freelance WordPress developer creating guides for clients, which components enhance the effectiveness of prompts when explaining website maintenance tasks? Choose all that apply.",
+    multi: true,
+    options: [
+      "References to advanced WordPress functions",
+      "Clear maintenance task definitions",
+      "Simple language with no assumptions",
+      "Use of humor to lighten the mood"
+    ],
+    correct: [1, 2],
+    hint: "Effective prompts should be easy for clients to understand and follow.",
+    explanation: "Clear task definitions and simple, assumption-free language help clients understand what needs to be done without confusion. Advanced references or humor may not always improve clarity."
+  },
+  {
+    topic: "WordPress",
+    text: "In the context of WordPress design, how should content hierarchy be determined to enhance user experience and engagement? Select all accurate strategies.",
+    multi: true,
+    options: [
+      "Place the most visually attractive elements first, regardless of importance",
+      "Organize information based on user value and priorities",
+      "Focus only on SEO keywords placement",
+      "Use headings, subheadings, and bullet points to create structure"
+    ],
+    correct: [1, 3],
+    hint: "Think about usability and scannability, not just visuals or SEO.",
+    explanation: "Effective content hierarchy prioritizes user needs (organizing by value/priority) and uses clear structural elements like headings and bullet points to make content easy to scan. Visual attractiveness alone or keyword stuffing do not improve user experience."
+  },
+  {
+    topic: "WordPress",
+    text: "Evaluate which of these attributes make a WordPress prompt successful in conveying its intended task. Select all that apply.",
+    multi: true,
+    options: [
+      "Clarity of purpose",
+      "Outline key steps explicitly",
+      "Use of technical jargon",
+      "Dependence on assumed knowledge"
+    ],
+    correct: [0, 1],
+    hint: "A good prompt is clear, specific, and does not rely on ambiguity.",
+    explanation: "Successful prompts are clear about their goal and explicitly outline steps. Jargon and assumed knowledge lead to confusion and incorrect outputs."
+  },
+  {
+    topic: "WordPress",
+    text: "Decide which tasks related to WordPress should be escalated to human experts rather than relying solely on AI tools. Select all the applicable options.",
+    multi: true,
+    options: [
+      "Processing customer payments and handling refunds",
+      "Optimizing images on a website",
+      "Conducting major site migrations",
+      "Drafting routine social media posts for the website",
+      "Developing custom production code"
+    ],
+    correct: [0, 2, 4],
+    hint: "High-risk, sensitive, or complex tasks require human oversight.",
+    explanation: "Payment processing, major migrations, and custom production code involve risk, security, or nuanced decisions that AI alone cannot safely handle. Image optimization and routine posts are suitable for AI assistance."
+  },
+  {
+    topic: "WordPress",
+    text: "Why is it important to craft effective prompts in managing e-commerce checkout processes in WordPress? Select all correct answers.",
+    multi: true,
+    options: [
+      "To provide personalized product recommendations during checkout",
+      "To improve customer satisfaction and conversion rates",
+      "To enhance product pricing strategies",
+      "To streamline the checkout process"
+    ],
+    correct: [0, 1, 3],
+    hint: "Think about direct benefits to the customer experience and checkout flow.",
+    explanation: "Effective prompts help tailor recommendations, improve satisfaction and conversion, and streamline the checkout process. Pricing strategies are not directly related to prompt crafting in checkout."
+  },
+  {
+    topic: "WordPress",
+    text: "When integrating AI plugins into a WordPress site, what are key SEO and performance considerations you should keep in mind? Select all that apply.",
+    multi: true,
+    options: [
+      "Ensure unique titles and meta tags for AI-generated content",
+      "Ensure the AI plugin does not add excessive or bloated markup",
+      "Check impact on Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS)",
+      "Compress images generated by AI tools before use"
+    ],
+    correct: [0, 1, 2, 3],
+    hint: "All these affect SEO, speed, and user experience.",
+    explanation: "Unique titles/meta tags avoid duplicate content issues; avoiding bloated markup keeps code clean; monitoring Core Web Vitals (LCP, INP, CLS) ensures good performance; compressing AI-generated images reduces load time."
+  },
+  {
+    topic: "WordPress Prompts",
+    text: "What is the significance of well-crafted prompts in scheduling content on a WordPress site? Choose all that are correct.",
+    multi: true,
+    options: [
+      "To ensure timely publication of posts",
+      "To automate content updates and publishing",
+      "To involve multiple stakeholders in content revisions",
+      "To enhance the visual appeal of the homepage"
+    ],
+    correct: [0, 1, 2],
+    hint: "Think about planning, timing, and teamwork.",
+    explanation: "Well-written prompts help schedule posts on time, automate publishing tasks, and support collaboration during content creation and revisions."
+  },
+  {
+    topic: "WordPress Tasks",
+    text: "Which WordPress tasks should be escalated to human experts for best results? Select all that apply.",
+    multi: true,
+    options: [
+      "Troubleshooting severe website security issues",
+      "Evaluating and implementing payment system updates",
+      "Automatically categorizing new posts",
+      "Implementing custom newsletter scripts",
+      "Updating site logos and branding"
+    ],
+    correct: [0, 1, 3],
+    hint: "Complex, risky, or technical changes often need experts.",
+    explanation: "Security issues, payment systems, and custom scripting can affect site safety and functionality, so they should be handled by experienced professionals."
+  },
+  {
+    topic: "WordPress Prompts",
+    text: "Identify the essential elements of a clear WordPress query prompt. Choose all that apply.",
+    multi: true,
+    options: [
+      "General knowledge assumption",
+      "Structured format with bullet points",
+      "Specific goal or task",
+      "Ambiguous language"
+    ],
+    correct: [1, 2],
+    hint: "Clear prompts are organized and focused.",
+    explanation: "A clear WordPress query prompt should have a structured format and a specific goal. General assumptions and ambiguous language reduce clarity."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the critical effect of well-crafted prompts in optimizing WordPress usage?",
+    multi: false,
+    options: [
+      "Automatically updates WordPress to the latest version",
+      "Leads to higher traffic by using fewer resources",
+      "Optimizes images without user intervention",
+      "Enables precise AI-generated solutions tailored to specific needs"
+    ],
+    correct: [3],
+    hint: "Think about how prompts guide AI to produce specific, useful outputs.",
+    explanation: "Well-crafted prompts allow AI to understand your exact requirements, leading to tailored solutions that fit your WordPress needs, rather than generic or incorrect outputs."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the primary role of plugins in a WordPress website?",
+    multi: false,
+    options: [
+      "Host websites on external servers",
+      "Modify core WordPress files",
+      "Optimize database queries",
+      "Add new features and functionalities"
+    ],
+    correct: [3],
+    hint: "Plugins extend what WordPress can do without changing core code.",
+    explanation: "Plugins are primarily used to add new features and functionalities to a WordPress site, such as contact forms, SEO tools, e-commerce capabilities, and more, without modifying the core WordPress files."
+  },
+  {
+    topic: "WordPress",
+    text: "Why is crafting well-defined prompts crucial when developing a WordPress theme?",
+    multi: false,
+    options: [
+      "To add more animations to the theme.",
+      "To provide higher chances of aligning development with user expectations.",
+      "To support only mobile view designs.",
+      "To facilitate seamless theme updates."
+    ],
+    correct: [1],
+    hint: "Clear prompts help AI or developers understand exactly what users need.",
+    explanation: "Well-defined prompts ensure that the generated theme or code matches user requirements closely, reducing misunderstandings and rework, and increasing alignment with what users actually expect."
+  },
+  {
+    topic: "WordPress",
+    text: "What is a permalink in WordPress?",
+    multi: false,
+    options: [
+      "A link to a social media profile",
+      "A link to a specific blog post or page on a website",
+      "A link to a website's privacy policy",
+      "A temporary link used during website development"
+    ],
+    correct: [1],
+    hint: "Permalinks are permanent URLs for your content.",
+    explanation: "A permalink is a permanent URL that points to a specific blog post, page, or other content on a WordPress site."
+  },
+  {
+    topic: "WordPress",
+    text: "Moving blocks in and out of groups, rows, stacks, and columns is sometimes easiest with which tool?",
+    multi: false,
+    options: [
+      "The dashboard",
+      "List view",
+      "The styles panel",
+      "The full-site editor"
+    ],
+    correct: [1],
+    hint: "This tool shows a hierarchical outline of all blocks on the page.",
+    explanation: "List view provides a tree-like structure of all blocks, making it easy to drag and drop blocks into or out of groups, rows, stacks, and columns."
+  },
+  {
+    topic: "WordPress",
+    text: "Where are all the automatic backups of the site stored?",
+    multi: false,
+    options: [
+      "In \"Dashboard\", under the site health window",
+      "WordPress does not have automatic backups; it must be done through a plugin",
+      "In \"Settings\", under the \"general\" tab",
+      "In \"Tools\", under the \"export\" tab"
+    ],
+    correct: [1],
+    hint: "WordPress core does not include automatic backup functionality.",
+    explanation: "By default, WordPress does not have built-in automatic backups. You need to use a backup plugin or your hosting provider's tools to create and store backups."
+  },
+  {
+    topic: "WordPress",
+    text: "Amaya places a heading, image, and paragraph block together on a page. She wants to add a background behind the blocks, adjust the margins and padding so the cluster isn't the full width of the page, and place a border around all of the blocks. What would be the best way to do this?",
+    multi: false,
+    options: [
+      "Using the pattern block",
+      "Using the nest block",
+      "Using the column block",
+      "Using the group block"
+    ],
+    correct: [3],
+    hint: "This block allows you to group other blocks and apply styling to the entire group.",
+    explanation: "The Group block lets you wrap multiple blocks together, then apply a background, margins, padding, and borders to the entire group as a single unit."
+  },
+  {
+    topic: "WordPress",
+    text: "In AI plugin infrastructure for WordPress, what is a significant practice to prevent bloated markup and enhance website performance?",
+    multi: false,
+    options: [
+      "Increasing the number of JavaScript files",
+      "Adding more widgets to increase interactivity",
+      "Minimizing the use of auto-generated HTML structure",
+      "Embedding rich media content"
+    ],
+    correct: [2],
+    hint: "Bloated markup often comes from unnecessary auto-generated code.",
+    explanation: "Minimizing auto-generated HTML structure reduces excess code, keeping the page lightweight and improving performance, while the other options can add bloat or hurt performance."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the purpose of locking blocks in the block editor?",
+    multi: false,
+    options: [
+      "To prevent changes from being made to it",
+      "To password protect information or portions of a site",
+      "To hide the content unless a user is logged in to the site",
+      "To stop it from moving as users scroll down a page"
+    ],
+    correct: [0],
+    hint: "Locking blocks is about restricting editing, not visibility or scrolling.",
+    explanation: "Locking a block prevents accidental or unauthorized changes to its content or settings, while other options relate to visibility or scrolling behavior."
+  },
+  {
+    topic: "WordPress",
+    text: "In relation to SEO, why is prompt crafting critical when using WordPress plugins or tools?",
+    multi: false,
+    options: [
+      "To automate all SEO tasks without manual input.",
+      "To disable all CSS stylesheets.",
+      "To produce structured, relevant, and easy-to-implement SEO strategies.",
+      "To clear cache regularly and automatically."
+    ],
+    correct: [2],
+    hint: "Effective prompts guide AI to generate useful, actionable SEO output.",
+    explanation: "Well-crafted prompts help produce organized, relevant SEO strategies that are easy to implement. Automation or cache clearing are not the primary reasons."
+  },
+  {
+    topic: "WordPress",
+    text: "On a real estate website, content about current market trends, tips for painting to attract buyers, hot new neighborhoods in the city, and other news would best be created as ______.",
+    multi: false,
+    options: [
+      "plugins",
+      "posts",
+      "categories",
+      "pages"
+    ],
+    correct: [1],
+    hint: "Time-sensitive, dated, or regularly updated content is usually posts.",
+    explanation: "Posts are designed for blog-style, time-stamped, and frequently updated content like news, tips, and trends, while pages are for static content."
+  },
+  {
+    topic: "WordPress",
+    text: "How many categories can a WordPress post be assigned to?",
+    multi: false,
+    options: [
+      "No categories can be assigned to a post",
+      "Up to three categories",
+      "As many categories as you want",
+      "Only one category"
+    ],
+    correct: [2],
+    hint: "Categories in WordPress are flexible, not limited to a small number.",
+    explanation: "WordPress allows you to assign a post to as many categories as you need, helping with content organization and discoverability."
+  },
+  {
+    topic: "WordPress",
+    text: "As a WordPress Developer, integrating prompts effectively into the website is crucial. Which method ensures a prompt is integrated properly within the site's interface?",
+    multi: false,
+    options: [
+      "Utilizing WordPress widgets for easy insertion",
+      "Placing prompts randomly within the content",
+      "Ignoring WordPress updates that affect shortcode functionality",
+      "Embedding prompts without testing across devices"
+    ],
+    correct: [0],
+    hint: "Use built-in tools that are designed for flexible placement and management.",
+    explanation: "WordPress widgets provide a standard, user-friendly way to insert prompts into sidebars, footers, or other widget areas, ensuring proper integration and maintainability."
+  },
+  {
+    topic: "WordPress",
+    text: "Changing the color of a button on the home page to draw attention is an example of a ______.",
+    multi: false,
+    options: [
+      "Local change",
+      "Developer change",
+      "Global change",
+      "Admin change"
+    ],
+    correct: [0],
+    hint: "A change that applies only to a specific element on a specific page.",
+    explanation: "A local change affects only a single element or page, not the entire site. Changing one button's color on the home page is local, not global."
+  },
+  {
+  topic: "WordPress Management",
+  text: "What role does prompt crafting play in effective WordPress management?",
+  multi: false,
+  options: [
+    "Eliminates all plugin-related issues without additional tools",
+    "Generates unlimited bandwidth for WordPress site",
+    "Enhances the website’s user interface automatically",
+    "Provides refined AI-driven actions and responses"
+  ],
+  correct: [3],
+  hint: "Consider how prompts guide AI behavior.",
+  explanation: "Prompt crafting helps generate refined AI-driven actions and responses, improving WordPress management efficiency."
+  },
+  {
+    topic: "SEO Management",
+    text: "When managing SEO tasks on WordPress, which situation requires escalation to human expertise?",
+    multi: false,
+    options: [
+      "Adding meta tags to new posts",
+      "Developing an SEO strategy for a new branding campaign",
+      "Using an SEO plugin to optimize title tags",
+      "Monitoring website traffic fluctuations"
+    ],
+    correct: [1],
+    hint: "Think about tasks that require strategic thinking and creativity.",
+    explanation: "Developing an SEO strategy for a new branding campaign involves high-level planning and human judgment, unlike routine tasks."
+  },
+  {
+    topic: "AI Workflow",
+    text: "Which of the following steps should be included in a proper iterative workflow when using AI to manage a WordPress website?",
+    multi: false,
+    options: [
+      "Draft content first, seek no feedback, then test directly on the live site",
+      "Publish AI content without any iterations or tests",
+      "Request AI-generated outlines, draft content, revise with feedback, and test in staging",
+      "Only use AI prompts to generate content without an initial outline"
+    ],
+    correct: [2],
+    hint: "Iteration and testing are key to quality.",
+    explanation: "A proper iterative workflow includes outlines, drafting, feedback, revision, and staging testing before going live."
+  },
+  {
+    topic: "HTTP Errors",
+    text: "A 404 error occurs when:",
+    multi: false,
+    options: [
+      "there are corrupted browser caches or cookies",
+      "trying to upload a file that is too large.",
+      "your server received the browser's request but rejected it for some reason.",
+      "a user attempts to access a web page that doesn't exist."
+    ],
+    correct: [3],
+    hint: "HTTP status code 404 means 'Not Found'.",
+    explanation: "A 404 error indicates the requested web page does not exist on the server."
+  },
+  {
+    topic: "Web Accessibility",
+    text: "What is an example of an assistive technology for web accessibility?",
+    multi: false,
+    options: [
+      "A screen reader",
+      "A video player",
+      "A smartphone app",
+      "A search engine"
+    ],
+    correct: [0],
+    hint: "Think of tools that help people with disabilities use the web.",
+    explanation: "Screen readers are assistive technologies that read web content aloud for visually impaired users."
+  },
+  
+  {
+    topic: "UI Design",
+    text: "What is user-interface (UI) design?",
+    multi: false,
+    options: [
+      "An AI tool built into WordPress to help beginners create better websites",
+      "An entire field dedicated to enhancing the visual appeal of a website",
+      "An entire field dedicated to how well a website works in terms of users being able to access information easily",
+      "A template feature that allows pages and posts to be created easily"
+    ],
+    correct: [1],
+    hint: "Think about how things look, not how they work.",
+    explanation: "UI design focuses on the visual aspects of a website, such as layout, colors, and buttons, making it attractive and easy to use."
+  },
+  
+  {
+    topic: "WordPress Editor",
+    text: "You’ve built a new landing page with headings, images, and a button. Before publishing it for visitors, what is the best way to see exactly how it will look?",
+    multi: false,
+    options: [
+      "View it from the Dashboard’s Posts section",
+      "Use the \"Preview\" option in the editor",
+      "Switch to Write mode to clean up the blocks",
+      "Visit the homepage and refresh your browser"
+    ],
+    correct: [1],
+    hint: "WordPress has a built-in way to see pages before they go live.",
+    explanation: "The Preview option shows exactly how your page will appear to visitors without publishing it."
+  },
+  {
+    topic: "WordPress Basics",
+    text: "CMS is an abbreviation for:",
+    multi: false,
+    options: [
+      "Changeable Management System",
+      "Common Management System",
+      "Content Management System",
+      "Clear Management System"
+    ],
+    correct: [2],
+    hint: "It describes how website content is created and managed.",
+    explanation: "CMS stands for Content Management System, which allows users to create, manage, and update website content easily."
+  },
+  {
+    topic: "WordPress Security",
+    text: "When deploying AI-generated PHP code on a WordPress site, which security measure should you prioritize checking?",
+    multi: false,
+    options: [
+      "Check if the code uses a sufficient amount of comments",
+      "Assess if the code is vulnerable to SQL injection attacks",
+      "Ensure the code has complex variable names",
+      "Verify the presence of colorful syntax highlighting"
+    ],
+    correct: [1],
+    hint: "Focus on protecting data and preventing attacks.",
+    explanation: "SQL injection vulnerabilities can allow attackers to access or damage databases, so checking for them is critical."
+  },
+  {
+    topic: "WordPress Features",
+    text: "In WordPress, which of the following features is most commonly used to create navigation menus, calls to action, and keyword search areas?",
+    multi: false,
+    options: [
+      "Block-based templates",
+      "Patterns and reusable blocks",
+      "Widgets and navigation blocks",
+      "Theme customizer"
+    ],
+    correct: [2],
+    hint: "These tools are often placed in headers, footers, or sidebars.",
+    explanation: "Widgets and navigation blocks are commonly used to build menus, buttons, and search areas across a site."
+  },
+  {
+    topic: "Web Accessibility",
+    text: "What should web designers prioritize to create an inclusive user experience?",
+    multi: false,
+    options: [
+      "Ensuring all elements are accessible to users with disabilities",
+      "Using complex animations everywhere",
+      "Designing every page to look identical",
+      "Focusing solely on an attractive color palette"
+    ],
+    correct: [0],
+    hint: "Think about all users, including those with different abilities.",
+    explanation: "Inclusive design ensures websites can be used by people with disabilities through accessibility-friendly features."
+  },
+  {
+    topic: "SEO",
+    text: "Which of the following is a recommended practice when writing SEO titles for a WordPress post?",
+    multi: false,
+    options: [
+      "Keep SEO titles under 60 characters",
+      "Avoid using numbers and punctuation in SEO titles",
+      "Avoid using primary keywords in the SEO title",
+      "Use the same title for every page"
+    ],
+    correct: [0],
+    hint: "Search engines may cut off long titles.",
+    explanation: "Keeping SEO titles under 60 characters helps ensure they display properly in search results."
+  },
+  {
+    topic: "CSS Basics",
+    text: "Dimitri wants to change the shape of a button from a rectangle with squared corners to have more rounded corners. What does he need to adjust?",
+    multi: false,
+    options: [
+      "The border radius",
+      "The padding",
+      "The shape settings",
+      "The margin"
+    ],
+    correct: [0],
+    hint: "This controls how sharp or round corners are.",
+    explanation: "The border radius property controls how rounded the corners of a button appear."
+  },
+  {
+    topic: "WordPress Basics",
+    text: "What is one difference between a post and a page in WordPress?",
+    multi: false,
+    options: [
+      "Posts are limited to 75,000 words and a media file size of 75 MB, while pages have no space limits",
+      "Posts are meant to be added frequently, while pages are usually only changed a couple times a year",
+      "Pages have access to more design blocks than posts",
+      "The number of pages on a site is limited, but posts have no limit"
+    ],
+    correct: [1],
+    hint: "Think about how often each type is updated.",
+    explanation: "Posts are typically used for timely or regularly updated content like blog entries, while pages are for more permanent content such as About or Contact pages."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "Dylan began creating a new page. He added a title in the \"Add Title\" area. He wants to center the title, but when he clicks the block, it says \"no block selected\" in the settings panel. How can he change the alignment of the title?",
+    multi: false,
+    options: [
+      "There is no way to change the alignment or any other style settings for a title",
+      "Go into the full-site editor to change the alignment on the template",
+      "Right-click the block and select \"force change\"",
+      "Use the pop-up menu above the block and press \"make editable\""
+    ],
+    correct: [1],
+    hint: "Some title settings are controlled by templates, not the page editor.",
+    explanation: "The page title is often controlled by the site’s template, so alignment changes must be made in the full-site editor."
+  },
+  
+  {
+    topic: "Site Design",
+    text: "Isabella updated her logo colors and wants all her headings on the website to match. What is the easiest way for her to change all the headings from the default color to her new color?",
+    multi: false,
+    options: [
+      "Change the block settings in the full-site editor",
+      "Edit all her pages and posts one-by-one to show the change",
+      "Find and install a plugin that changes the colors",
+      "Update the settings on each template she used for her posts and pages"
+    ],
+    correct: [0],
+    hint: "Global changes are best made in one place.",
+    explanation: "Using the full-site editor allows global styles to be updated once, automatically applying the new heading color across the entire site."
+  },
+  {
+    topic: "WordPress Blocks",
+    text: "Featured image, excerpt, and site logo are all _________ blocks.",
+    multi: false,
+    options: [
+      "dynamic",
+      "static",
+      "analytical",
+      "custom"
+    ],
+    correct: [0],
+    hint: "These blocks change based on the content or page.",
+    explanation: "Dynamic blocks display content that changes depending on the page, such as featured images, excerpts, and site logos."
+  },
+  {
+    topic: "WordPress",
+    text: "On a real estate website, content about the company, ways to search for available homes, and ways to reach a realtor to sell your home would best be created as __________.",
+    multi: false,
+    options: ["posts", "categories", "pages", "plugins"],
+    correct: [2],
+    hint: "Think about static, informational content.",
+    explanation: "Pages are used for static content like company info, search pages, and contact details, rather than dynamic or time-based content like posts."
+  },
+  {
+    topic: "WordPress",
+    text: "One of the advantages to WordPress being open-source is ________________.",
+    multi: false,
+    options: [
+      "A variety of plugins and themes are developed since everyone has access to the code",
+      "The developers make enough money through paid services to keep their code secret, which results in no competition and more updates",
+      "It is more secure since the code is encrypted",
+      "You can use it for free as long as your site is under 5 GB with fewer than 100,000 visitors per year"
+    ],
+    correct: [0],
+    hint: "Open-source means anyone can contribute.",
+    explanation: "Because WordPress is open-source, developers worldwide can access the code and build plugins and themes, leading to a large and diverse ecosystem."
+  },
+  {
+    topic: "WordPress",
+    text: "Which of the following is primarily used to group similar WordPress posts under broader topics?",
+    multi: false,
+    options: ["Categories", "Tags", "Excerpts", "Slugs"],
+    correct: [0],
+    hint: "Think hierarchy and broad organization.",
+    explanation: "Categories are used to group posts into broad topics, while tags are more specific descriptors."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the difference between categories and tags in WordPress?",
+    multi: false,
+    options: [
+      "Categories and tags are the same thing",
+      "Tags are hierarchical while categories are not",
+      "Categories are hierarchical while tags are not",
+      "Both categories and tags are hierarchical"
+    ],
+    correct: [2],
+    hint: "One allows parent-child structure.",
+    explanation: "Categories support a hierarchical structure (parent and child categories), whereas tags are flat and non-hierarchical."
+  },
+  {
+    topic: "WordPress",
+    text: "You are an administrator of the WordPress site named “makeupandstuff.com”. What will be a URL address to access administration panel:",
+    multi: false,
+    options: [
+      "https://administrator.com/wp-admin",
+      "https://makeupandstuff.com/admin",
+      "https://makeupandstuff.com/wp-admin",
+      "https://wp-admin/makeupandstuff.com"
+    ],
+    correct: [2],
+    hint: "WordPress uses a standard admin path.",
+    explanation: "The default WordPress admin dashboard is accessed by adding /wp-admin to the site's domain."
+  },
+  {
+    topic: "WordPress",
+    text: "Can you assign a post to multiple categories in WordPress?",
+    multi: false,
+    options: [
+      "No, you can only assign a post to one category",
+      "Yes, you can assign a post to multiple categories",
+      "It depends on the theme being used",
+      "You can assign up to three categories to a post"
+    ],
+    correct: [1],
+    hint: "Posts are flexible in organization.",
+    explanation: "WordPress allows assigning multiple categories to a single post for broader classification."
+  },
+  {
+    topic: "WordPress",
+    text: "Can you assign multiple tags to a WordPress post?",
+    multi: false,
+    options: [
+      "Yes, you can assign as many tags as you want",
+      "You can assign up to three tags to a post",
+      "It depends on the theme being used",
+      "No, you can only assign one tag to a post"
+    ],
+    correct: [0],
+    hint: "Tags are highly flexible.",
+    explanation: "WordPress allows unlimited tags to be added to posts to describe specific details."
+  },
+  {
+    topic: "WordPress",
+    text: "Changing the button block in the full-site editor so that the radius is 25 px is an example of a ________________.",
+    multi: false,
+    options: ["Admin change", "Developer change", "Local change", "Global change"],
+    correct: [2],
+    hint: "Think scope of a single block edit.",
+    explanation: "Adjusting a single block’s styling in the editor only affects that specific instance, making it a local change."
+  },
+  {
+    topic: "WordPress",
+    text: "All of the following can be added to a navigation menu EXCEPT:",
+    multi: false,
+    options: ["Widgets", "Posts", "Links to specific URLs", "Pages"],
+    correct: [0],
+    hint: "Menus usually link to content, not functional blocks.",
+    explanation: "Navigation menus can include pages, posts, and custom links, but widgets are added to widget areas, not menus."
+  },
+  {
+    topic: "WordPress",
+    text: "Image file is licensed under CC BY-NC license. You:",
+    multi: false,
+    options: [
+      "Can use the image as you want but you should mention authors’ name",
+      "Can use the image without changing it",
+      "Are not allowed to use materials without authors’ permission",
+      "Can use the image for non-commercial purposes only"
+    ],
+    correct: [3],
+    hint: "Focus on what 'NC' means.",
+    explanation: "CC BY-NC means attribution is required and the work can only be used for non-commercial purposes."
+  },
+  {
+    topic: "WordPress",
+    text: "What does changing an image’s focal point do?",
+    multi: false,
+    options: [
+      "Allow other blocks to be placed on top of the image, like text or buttons",
+      "Enhance the exposure to make the image brighter",
+      "Move the area of the image that is displayed to viewers",
+      "Change the image shape from rectangular to circular"
+    ],
+    correct: [2],
+    hint: "It affects cropping focus.",
+    explanation: "Changing the focal point determines which part of the image remains visible when it is cropped or resized."
+  },
+  {
+    topic: "WordPress",
+    text: "Antonio wants to upload his logo to his site. When he uploads the JPEG, there is still a square white background behind the logo. What type of file should be used so the background can be transparent?",
+    multi: false,
+    options: ["BMP", "JFIF", "PNG", "GIF"],
+    correct: [2],
+    hint: "Look for transparency support.",
+    explanation: "PNG files support transparent backgrounds, unlike JPEG/JFIF formats."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the difference between pixel size and resolution of an image?",
+    multi: false,
+    options: [
+      "Pixel size and resolution are the same thing",
+      "None of the above",
+      "Pixel size refers to the physical dimensions of the image, while resolution refers to the number of pixels per inch.",
+      "Pixel size refers to the file size of the image, while resolution refers to the clarity of the image"
+    ],
+    correct: [2],
+    hint: "Think dimensions vs density.",
+    explanation: "Pixel dimensions define image size, while resolution refers to pixel density (e.g., pixels per inch)."
+  },
+  {
+    topic: "WordPress",
+    text: "Marc created a website about the different types of video game consoles. For the first six months after launching, his monthly site visitor rate was high. Now, there are no new consoles to add information about on his page, so the information hasn’t changed. What could Marc do to encourage past visitors to return to his site?",
+    multi: false,
+    options: [
+      "Change the color palette and typography to change the look of the site",
+      "Change his headers and footers to include widgets",
+      "Install a plugin to measure the analytical data of who is visiting his site",
+      "Create posts about games, systems, esports, and upcoming releases to allow for new content to be added regularly"
+    ],
+    correct: [3],
+    hint: "Fresh content keeps users coming back.",
+    explanation: "Regularly publishing new content encourages repeat visits and improves engagement and SEO."
+  },
+  {
+    topic: "WordPress",
+    text: "Best practices for placing content on the page include all of the following EXCEPT:",
+    multi: false,
+    options: [
+      "Adding visual elements like images and columns to compliment text",
+      "Breaking up long paragraphs of text into smaller paragraphs",
+      "Using several subheadings to break information into sections",
+      "Using long paragraphs to create a strong narrative and provide users with lots of information"
+    ],
+    correct: [3],
+    hint: "Readability is key.",
+    explanation: "Long paragraphs reduce readability; breaking content into smaller chunks with visuals and headings improves user experience."
+  },
+  {
+    topic: "WordPress",
+    text: "What is anchor text?",
+    multi: false,
+    options: [
+      "It is the most prominent text on the page that the search engines use to assign a title to the page",
+      "It is the visible text that is hyperlinked to another page",
+      "It is the text within the left or top panel of a web page",
+      "It is the main body of text on a particular web page"
+    ],
+    correct: [1],
+    hint: "Think clickable text in a link.",
+    explanation: "Anchor text is the clickable, visible text in a hyperlink that directs users to another page."
+  },
+  {
+    topic: "WordPress",
+    text: "What is user-experience (UX) design?",
+    multi: false,
+    options: [
+      "An AI tool built into WordPress to help beginners create better websites",
+      "An entire field dedicated to how well a website works in terms of users being able to access information easily",
+      "A template feature that allows pages and posts to be created easily",
+      "An entire field dedicated to enhancing the visual appeal of a website"
+    ],
+    correct: [1],
+    hint: "Focus on usability and how users interact with a site.",
+    explanation: "UX design focuses on how effectively and easily users can interact with and access information on a website."
+  },
+  {
+    topic: "WordPress",
+    text: "The site logo, tagline, and name are all part of the __________________.",
+    multi: false,
+    options: ["Footer", "Site settings", "Dashboard", "Site identity"],
+    correct: [3],
+    hint: "Think branding elements.",
+    explanation: "Logo, tagline, and site name are all part of the site's identity settings in WordPress."
+  },
+  {
+    topic: "WordPress",
+    text: "As an SEO Specialist, you are optimizing prompts for better search engine visibility on your WordPress site. Which element is essential for crafting an effective prompt that improves SEO performance?",
+    multi: false,
+    options: [
+      "Incorporating targeted keywords naturally",
+      "Writing prompts in passive voice",
+      "Repeating the same information excessively",
+      "Using non-descriptive URLs"
+    ],
+    correct: [0],
+    hint: "Think about how search engines understand content.",
+    explanation: "Using targeted keywords naturally helps search engines understand and rank the content effectively."
+  },
+  {
+    topic: "WordPress",
+    text: "What purpose do custom post types serve in WordPress?",
+    multi: false,
+    options: [
+      "They optimize database queries for speed",
+      "They enable the creation of new content types beyond default ones like posts and pages",
+      "They allow users to customize themes",
+      "They enhance media library capabilities"
+    ],
+    correct: [1],
+    hint: "Think beyond posts and pages.",
+    explanation: "Custom post types allow WordPress to manage different kinds of content separately, such as portfolios or products."
+  },
+  {
+    topic: "WordPress",
+    text: "While managing a WordPress blog, you receive AI-generated content. Which aspect is MOST important to fact-check before publication?",
+    multi: false,
+    options: [
+      "Focus on finding rhymes and poetic styles in the content.",
+      "Ensure the content length aligns with an exact number of words.",
+      "Check for the usage of complex words and jargon.",
+      "Verify the accuracy of statistics and dates provided in the content."
+    ],
+    correct: [3],
+    hint: "Accuracy is key for credibility.",
+    explanation: "Fact-checking statistics and dates ensures the reliability and trustworthiness of published content."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the primary function of widgets in a WordPress site?",
+    multi: false,
+    options: [
+      "To enhance the site's SEO",
+      "To manage user roles",
+      "To add static and dynamic content to the site's sidebars",
+      "To encrypt user data"
+    ],
+    correct: [2],
+    hint: "Think about sidebars and extra content areas.",
+    explanation: "Widgets are used to add content and features (like menus or recent posts) to widget-ready areas such as sidebars."
+  },
+  {
+    topic: "WordPress",
+    text: "What web design practice can significantly improve a site's search engine ranking?",
+    multi: false,
+    options: [
+      "Hiding content behind multiple pop-ups",
+      "Structuring content with proper heading tags",
+      "Employing lengthy meta descriptions",
+      "Using numerous keywords in random locations"
+    ],
+    correct: [1],
+    hint: "Structure matters for SEO.",
+    explanation: "Proper heading tags help organize content clearly, making it easier for search engines to understand and index."
+  },
+  {
+    topic: "WordPress",
+    text: "When designing a website, what is one of the primary considerations that ensures the design meets its objectives?",
+    multi: false,
+    options: [
+      "Maximizing the multimedia content",
+      "Defining the target audience and website goals",
+      "Choosing the most popular design trend",
+      "Using the latest technology stack"
+    ],
+    correct: [1],
+    hint: "Think about purpose and users.",
+    explanation: "Understanding the target audience and goals ensures the design aligns with user needs and business objectives."
+  },
+  {
+    topic: "WordPress Security",
+    text: "How does effective prompt crafting contribute to enhancing security measures in WordPress site management?",
+    multi: false,
+    options: [
+      "By ensuring that security requirements and implementations are comprehensive and clear.",
+      "By increasing the frequency of social media post scheduling.",
+      "By automatically blocking all user access.",
+      "By facilitating the direct editing of core WordPress files."
+    ],
+    correct: [0],
+    hint: "Think about how clear communication improves technical outcomes.",
+    explanation: "Effective prompt crafting ensures that security requirements and implementations are clearly and comprehensively defined, leading to better security outcomes."
+  },
+  {
+    topic: "WordPress Themes",
+    text: "Which of the following best describes the role of a theme in WordPress?",
+    multi: false,
+    options: [
+      "It alters the appearance and layout of the website",
+      "It updates the WordPress core",
+      "It secures the WordPress database",
+      "It provides server backup solutions"
+    ],
+    correct: [0],
+    hint: "Themes are primarily a visual tool.",
+    explanation: "A WordPress theme controls the visual appearance and layout of a website, including design, colors, typography, and structure."
+  },
+  {
+    topic: "CSS / Design",
+    text: "What are margins?",
+    multi: false,
+    options: [
+      "The amount of space between lines in paragraph text",
+      "The space between the content and its border",
+      "The space between elements",
+      "The point at which the layout changes to tablet or phone settings"
+    ],
+    correct: [2],
+    hint: "Think about the CSS box model and what lies outside an element's border.",
+    explanation: "Margins define the space between elements — the area outside an element's border, separating it from neighboring elements."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "Jonas created a custom template in the full-site editor to use with his posts. He selected the template in the block editor and added images and text to his post. When he previewed the post, he does not see any of the content he added. What could be the problem?",
+    multi: false,
+    options: [
+      "He did not add a \"post content\" block to the template to show the added content",
+      "He is on an old version of WordPress and needs to install all the updates to see his work",
+      "He has his custom template set as a \"page\" instead of a \"post\"",
+      "There is a plugin that is installed and causing a conflict"
+    ],
+    correct: [0],
+    hint: "Custom templates need a specific block to display post content.",
+    explanation: "When using a custom template in the full-site editor, a \"Post Content\" block must be included in the template for any content added in the block editor to appear on the page."
+  },
+  {
+    topic: "Research & Citations",
+    text: "Which of the following lists includes the basic elements found in most citations?",
+    multi: false,
+    options: [
+      "Author, Editor, Source Type",
+      "Author, Title, Date, Location/URL",
+      "Title, City",
+      "URL"
+    ],
+    correct: [1],
+    hint: "Think about what information a reader needs to locate and credit a source.",
+    explanation: "Most citation formats require the Author, Title, Date, and Location/URL so that readers can identify and find the original source."
+  },
+  {
+    topic: "SEO",
+    text: "Define keyword density in the context of SEO and content optimization.",
+    multi: false,
+    options: [
+      "The number of times the keyword is used / (divided by) the total word count on page – (minus) the total words in HTML on the page",
+      "The number of times the keyword is used in the page description",
+      "The number of times the keyword is used / (divided by) the total word count on the page.",
+      "The number of times the keyword is used in the page title"
+    ],
+    correct: [2],
+    hint: "Keyword density is a ratio of keyword occurrences to total content.",
+    explanation: "Keyword density is calculated by dividing the number of times a keyword appears by the total word count on the page, giving a percentage that reflects how often the keyword is used relative to all content."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "What are patterns?",
+    multi: false,
+    options: [
+      "Textures that can be added to solid-color backgrounds to change the look",
+      "Another name for columns",
+      "Pre-built design elements to add to a post or page consisting of several blocks",
+      "Repeating the same layout and design for several sections on the same page"
+    ],
+    correct: [2],
+    hint: "Patterns are reusable and made up of multiple blocks.",
+    explanation: "In WordPress, patterns are pre-built design elements composed of multiple blocks that can be inserted into posts or pages to speed up layout creation."
+  },
+  {
+    topic: "WordPress Design",
+    text: "What is a gradient?",
+    multi: false,
+    options: [
+      "A color that is in RGB",
+      "A printed texture that can be applied to background to give it depth",
+      "An additional layer on top of a photo, usually adding a color with the opacity settings changed so the photo can still be seen",
+      "A color progression from one color to another"
+    ],
+    correct: [3],
+    hint: "Gradients involve a transition between colors.",
+    explanation: "A gradient is a visual effect that shows a smooth progression from one color to another, commonly used in backgrounds and design elements."
+  },
+  {
+    topic: "WordPress Plugins",
+    text: "What is a primary reason for crafting effective prompts when managing WordPress plugins?",
+    multi: false,
+    options: [
+      "To ensure developers understand desired plugin behaviors and outcomes.",
+      "To decrease the website's load time.",
+      "To convert all images to .png format automatically.",
+      "To determine accurate keyword usage in posts."
+    ],
+    correct: [0],
+    hint: "Effective prompts are about clear communication of intent.",
+    explanation: "Crafting effective prompts when managing WordPress plugins ensures that developers clearly understand the desired behaviors and outcomes, leading to plugins that function as intended."
+  },
+  {
+    topic: "WordPress Design",
+    text: "What does changing the justification of an item do?",
+    multi: false,
+    options: [
+      "Alter the spacing between that item and other items",
+      "Rotate the item",
+      "Change the alignment to right, center, or left",
+      "Make a block full-width"
+    ],
+    correct: [2],
+    hint: "Justification is related to how content is positioned horizontally.",
+    explanation: "Changing the justification of an item adjusts its horizontal alignment, allowing it to be positioned to the right, center, or left."
+  },
+  {
+    topic: "Media & Licensing",
+    text: "What is the purpose of a license for media?",
+    multi: false,
+    options: [
+      "To make the media publicly available without restrictions",
+      "To provide a guarantee of quality for the media",
+      "To protect the creator's intellectual property rights",
+      "None of the above"
+    ],
+    correct: [2],
+    hint: "Think about why creators need legal protection for their work.",
+    explanation: "A media license exists to protect the intellectual property rights of the creator, defining how others may or may not use the content."
+  },
+  {
+    topic: "SEO",
+    text: "Which of the following website design guidelines has Google recommended?",
+    multi: false,
+    options: [
+      "Having a clear hierarchy and text links",
+      "Use less than 30 images or graphics per page",
+      "If the site map is larger than 100 or so links, you should break the site map into separate pages",
+      "Every page should be reachable from at least one static text link"
+    ],
+    correct: [3],
+    hint: "Google's guidelines focus on making all pages accessible to crawlers.",
+    explanation: "Google recommends that every page on a website should be reachable from at least one static text link, ensuring search engine crawlers can discover and index all content."
+  },
+  {
+    topic: "Web Design",
+    text: "The color \"ABB8C3\" is written in:",
+    multi: false,
+    options: [
+      "Octal",
+      "Binary",
+      "Decimal",
+      "Hexadecimal"
+    ],
+    correct: [3],
+    hint: "Web colors using letters A–F combined with digits are a specific number format.",
+    explanation: "The color \"ABB8C3\" is written in hexadecimal format, which uses digits 0–9 and letters A–F to represent color values in web design."
+  },
+  {
+    topic: "WordPress",
+    text: "What programming language is WordPress primarily built with?",
+    multi: false,
+    options: [
+      "HTML",
+      "Java",
+      "PHP",
+      "CSS"
+    ],
+    correct: [2],
+    hint: "This server-side scripting language powers most of the web's CMS platforms.",
+    explanation: "WordPress is primarily built with PHP, a server-side scripting language, which handles its core functionality, database interactions, and plugin/theme architecture."
+  },
+  {
+    topic: "WordPress Design",
+    text: "What is an overlay on an image?",
+    multi: false,
+    options: [
+      "An additional layer on top of a photo, usually adding a color with the opacity settings changed so the photo can still be seen",
+      "A color progression from one color to another",
+      "A color that is in RGB",
+      "A printed texture that can be applied to background to give it depth"
+    ],
+    correct: [0],
+    hint: "Think about a semi-transparent layer placed on top of an existing image.",
+    explanation: "An overlay is an additional layer placed on top of a photo, typically a color with reduced opacity so that the underlying image remains partially visible."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "Mei used the \"single\" template to create a post. She typed her title, added a photo underneath, then had several paragraph blocks. When she previews her post, she sees the image she added in the block editor along with the featured image, stacked on top of each other. What is the easiest way to fix this problem?",
+    multi: false,
+    options: [
+      "Find, install, and activate a plugin to hide the featured image",
+      "Remove the image she originally wanted to use since all posts must display the featured image at the top",
+      "Change the \"single\" template so it doesn't automatically display the \"featured image\" at the top of the post",
+      "Move the image she originally wanted to use further down into the post, since the featured image has to be on top, she can move hers somewhere else in the post"
+    ],
+    correct: [2],
+    hint: "The template controls what automatically appears at the top of a post.",
+    explanation: "The easiest fix is to edit the \"single\" template in the full-site editor to remove the featured image block, preventing it from automatically displaying alongside the manually added image."
+  },
+  {
+    topic: "Media & Licensing",
+    text: "What is public domain content?",
+    multi: false,
+    options: [
+      "Content that is only available for non-commercial use",
+      "Content that is licensed under Creative Commons",
+      "Content that is only available with permission from the creator",
+      "Content that is not subject to copyright"
+    ],
+    correct: [3],
+    hint: "Public domain means no one owns exclusive rights to the content.",
+    explanation: "Public domain content is not subject to copyright, meaning it can be freely used, modified, and distributed by anyone without needing permission or paying licensing fees."
+  },
+  {
+    topic: "WordPress",
+    text: "How should you use tags in WordPress to improve the navigation of your website?",
+    multi: false,
+    options: [
+      "Use as many tags as possible to cover all possible topics",
+      "Tags are not useful for improving navigation of a website",
+      "Use tags only for the most important keywords or topics covered on your website",
+      "Use tags to label content with specific keywords or topics, and provide a tag cloud or tag index for easy navigation"
+    ],
+    correct: [3],
+    hint: "Tags work best when they help visitors find related content quickly.",
+    explanation: "Tags should be used to label content with specific keywords or topics. Pairing this with a tag cloud or tag index gives visitors an easy way to browse related content and improves overall site navigation."
+  },
+  {
+    topic: "Web Accessibility",
+    text: "We would say that a site is operable if:",
+    multi: false,
+    options: [
+      "We offer input assistance",
+      "We can easily access all parts of the site by keyboard",
+      "Add alternative text to images",
+      "The content can be easily interpreted"
+    ],
+    correct: [1],
+    hint: "Operability is about how users interact with and navigate the site.",
+    explanation: "A site is considered operable when all parts of it can be accessed and navigated using a keyboard, which is a core requirement of web accessibility standards."
+  },
+  {
+    topic: "SEO",
+    text: "Regarding image optimization in an AI-managed WordPress platform, which approach is best for SEO and performance enhancement?",
+    multi: false,
+    options: [
+      "Utilizing multi-format image files for every upload",
+      "Compressing images without significant quality loss",
+      "Uploading direct unmodified camera photos",
+      "Using high-resolution images regardless of size"
+    ],
+    correct: [1],
+    hint: "Smaller file sizes improve page load speed, which benefits SEO.",
+    explanation: "Compressing images without significant quality loss reduces file size and improves page load speed, which is a key factor in both SEO rankings and overall site performance."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "Featured image, excerpt, and site logo are all __________ blocks.",
+    multi: false,
+    options: [
+      "dynamic",
+      "static",
+      "analytical",
+      "custom"
+    ],
+    correct: [0],
+    hint: "These blocks pull content automatically from the site or post data.",
+    explanation: "Featured image, excerpt, and site logo are all dynamic blocks, meaning they automatically pull and display content from the site or post data rather than having fixed, manually entered content."
+  },
+  {
+    topic: "WordPress",
+    text: "In what way does good prompt crafting benefit the administration of WordPress?",
+    multi: false,
+    options: [
+      "Enhances AI-driven accuracy for content management",
+      "Ensures spam comments are filtered automatically",
+      "Allows for seamless integration with all external APIs",
+      "Leads to automatic backup of site content"
+    ],
+    correct: [0],
+    hint: "Think about how clear instructions improve AI tool performance.",
+    explanation: "Good prompt crafting enhances AI-driven accuracy for content management by providing clear, precise instructions that help AI tools perform administrative tasks more effectively and accurately."
+  },
+  {
+    topic: "WordPress",
+    text: "What is the Media Library in WordPress?",
+    multi: false,
+    options: [
+      "A library of books and other resources for WordPress users",
+      "A repository of media files, such as images, videos, and audio files, used in WordPress posts and pages",
+      "None of the above",
+      "A collection of WordPress themes and plugins"
+    ],
+    correct: [1],
+    hint: "It's a built-in storage area for files you upload to your site.",
+    explanation: "The Media Library in WordPress is a built-in repository that stores all uploaded media files — including images, videos, and audio — making them available for use in posts and pages."
+  },
+  {
+    topic: "SEO",
+    text: "WordPress uses which heading setting to help web crawlers identify the page title?",
+    multi: false,
+    options: [
+      "h6",
+      "cover",
+      "h1",
+      "header"
+    ],
+    correct: [2],
+    hint: "Web crawlers prioritize the top-level heading to understand the main topic of a page.",
+    explanation: "WordPress uses the h1 heading tag to signal to web crawlers what the primary title and topic of a page is, making it an important element for SEO."
+  },
+  {
+    topic: "WordPress Media",
+    text: "What is the difference between title and alt text in WordPress media?",
+    multi: false,
+    options: [
+      "Title is used for the display of the media and alt text is used to provide a description for visually impaired users",
+      "Title is the name of the file and alt text is used for SEO",
+      "Title and alt text are interchangeable terms in WordPress media",
+      "Title is used for SEO and alt text is the name of the file"
+    ],
+    correct: [0],
+    hint: "One is for display purposes, the other is for accessibility.",
+    explanation: "In WordPress media, the title is the display name shown on the site, while alt text provides a descriptive text alternative for visually impaired users and assistive technologies."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "You want to visually sketch out and organize the structure of a page using WordPress tools. What feature allows you to design the layout using blocks and patterns directly on the site?",
+    multi: false,
+    options: [
+      "The Revisions Panel",
+      "The Site Editor",
+      "The Plugin Installer",
+      "The Template Hierarchy"
+    ],
+    correct: [1],
+    hint: "This tool lets you edit the entire site's layout, not just individual posts.",
+    explanation: "The Site Editor (also known as the full-site editor) allows you to visually design and organize page layouts using blocks and patterns directly on the site, giving full control over the entire site structure."
+  },
+  {
+    topic: "WordPress",
+    text: "What is WordPress?",
+    multi: false,
+    options: [
+      "A learning management system (LMS)",
+      "A low-level programming language, often called an assembly language",
+      "A high-level programming language like Java or Python",
+      "A content management system (CMS)"
+    ],
+    correct: [3],
+    hint: "WordPress is used to create and manage website content without coding.",
+    explanation: "WordPress is a content management system (CMS) that allows users to create, manage, and publish website content without needing to write code from scratch."
+  },
+  {
+    topic: "WordPress",
+    text: "What happens to posts or pages associated with a category or tag that is deleted in WordPress?",
+    multi: false,
+    options: [
+      "The posts or pages remain unchanged",
+      "It depends on the settings of your WordPress website",
+      "The posts or pages are moved to a new category or tag",
+      "The posts or pages are also deleted"
+    ],
+    correct: [0],
+    hint: "Deleting a category or tag only removes the label, not the content.",
+    explanation: "When a category or tag is deleted in WordPress, the posts or pages associated with it remain unchanged — only the taxonomy label is removed, not the content itself."
+  },
+  {
+    topic: "WordPress Editor",
+    text: "The default template for a post is:",
+    multi: false,
+    options: [
+      "Full-Width",
+      "Page",
+      "Single",
+      "Index"
+    ],
+    correct: [2],
+    hint: "Its name reflects that it's used for displaying one individual post at a time.",
+    explanation: "The default template for a post in WordPress is called \"Single,\" which is designed to display one individual post at a time with its full content."
+  },
+  {
+    topic: "WordPress Design",
+    text: "What are global settings?",
+    multi: false,
+    options: [
+      "Default WordPress styles",
+      "Theme-based styles that can only be changed with specific themes",
+      "Styles set for just one element",
+      "Styles set for the entire site"
+    ],
+    correct: [3],
+    hint: "\"Global\" means these settings apply everywhere across the site.",
+    explanation: "Global settings are styles applied across the entire site, such as font, color, and spacing choices that affect all pages and posts rather than a single element."
+  },
+  {
+    topic: "Web Design",
+    text: "Typography settings relate to:",
+    multi: false,
+    options: [
+      "Arranging text so that the font type, color, and style are visually appealing",
+      "Design principles that include the use of empty space to guide the user's eye to important information",
+      "The color palette chosen for a site",
+      "How items are layered on a page by altering the Z-index"
+    ],
+    correct: [0],
+    hint: "Typography is all about how text looks and is presented.",
+    explanation: "Typography settings relate to how text is arranged and styled, including choices about font type, color, size, and style to make content visually appealing and readable."
+  },
+  {
+    topic: "Media & Licensing",
+    text: "The Creative Commons license feature Attribution requires:",
+    multi: false,
+    options: [
+      "The user to pay to the creator.",
+      "The user to make a derivative of the work.",
+      "The user to give the creator credit.",
+      "The user to sell copies of the work."
+    ],
+    correct: [2],
+    hint: "Attribution means acknowledging where something comes from.",
+    explanation: "The Attribution (BY) feature of a Creative Commons license requires that anyone who uses the work must give appropriate credit to the original creator."
+  },
+  {
+    topic: "SEO",
+    text: "Understand why site maps are used to improve search engine optimization.",
+    multi: false,
+    options: [
+      "None of the above",
+      "Google gives credit to the websites having site maps. The GoogleBot looks for the keyword or title \"Site Map\" on the home page of a website.",
+      "Site maps help the search engine spider pick up more pages from the website",
+      "Site maps help the search engine editorial staff to quickly go through a website, hence ensuring quicker placement"
+    ],
+    correct: [2],
+    hint: "Think about how search engines discover and index pages on a site.",
+    explanation: "Site maps improve SEO by helping search engine spiders discover and index more pages from the website, ensuring better coverage of the site's content in search results."
+  },
+  {
+    topic: "SEO",
+    text: "In the context of SEO and performance considerations when using AI to manage a WordPress site, which practice is crucial for improving search engine rankings?",
+    multi: false,
+    options: [
+      "Applying the same title to all pages for consistency",
+      "Using unique meta titles for each page",
+      "Automatically generating content descriptions",
+      "Increasing the keyword density"
+    ],
+    correct: [1],
+    hint: "Search engines use page titles to understand what each page is about.",
+    explanation: "Using unique meta titles for each page is crucial for SEO because it helps search engines understand the distinct topic of each page, improving indexing and ranking for relevant searches."
+  },
+  {
+    topic: "WordPress",
+    text: "When managing a WordPress site with AI-generated content, which iterative workflow process should be followed to ensure high-quality postings?",
+    multi: false,
+    options: [
+      "Generate content and publish immediately without review",
+      "Request outlines and finalize content immediately",
+      "Draft AI content, critique it, refine and publish, then test in staging",
+      "Refine content post-publishing for better engagement"
+    ],
+    correct: [2],
+    hint: "Quality content requires review and testing before going live.",
+    explanation: "The best iterative workflow for AI-generated content is to draft, critique, refine, publish, and then test in a staging environment — ensuring quality and accuracy before the content reaches a live audience."
+  },
+  {
+    topic: "WordPress",
+    text: "As a Content Manager, you are responsible for ensuring the prompts and content on your WordPress site are effective and engaging. Which of the following elements is most critical to enhance an effective prompt?",
+    multi: false,
+    options: [
+      "Presenting information as a block of text",
+      "Including a clear call to action",
+      "Using complex vocabulary",
+      "Adding irrelevant images"
+    ],
+    correct: [1],
+    hint: "Effective prompts guide users toward a specific next step.",
+    explanation: "Including a clear call to action is the most critical element of an effective prompt, as it tells the audience exactly what to do next and drives engagement and conversions."
+  }
+];
+  /* ← Add question objects here */
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let QUESTIONS = [], currentQ = 0, score = 0, userAnswers = [];
+let answered = false, selectedOptions = [];
+let playerName = '';
+let quizStartTime = null;
+
+/* ══════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function arraysMatch(a, b) {
+  return a.length === b.length && a.every((v,i) => v === b[i]);
+}
+function formatDateTime(d) {
+  return d.toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'})
+    + ' · ' + d.toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'});
+}
+
+/* ══════════════════════════════════════════════
+   WELCOME
+══════════════════════════════════════════════ */
+function initWelcome() {
+  const totalEl = document.getElementById('stat-total');
+  const warn    = document.getElementById('no-q-warning');
+  const btn     = document.getElementById('btn-start');
+  totalEl.textContent = ALL_QUESTIONS.length;
+  if (ALL_QUESTIONS.length === 0) {
+    warn.classList.add('show');
+    btn.disabled = true;
+  } else {
+    warn.classList.remove('show');
+    btn.disabled = false;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   START
+══════════════════════════════════════════════ */
+function startQuiz() {
+  if (ALL_QUESTIONS.length === 0) return;
+
+  const shuffled = shuffle(ALL_QUESTIONS);
+  const maxQuestions = 30;
+  QUESTIONS = shuffled.slice(0, Math.min(maxQuestions, shuffled.length));
+  currentQ = 0; score = 0; userAnswers = [];
+  quizStartTime = new Date();
+
+  document.getElementById('q-total').textContent = QUESTIONS.length;
+  showScreen('quiz-screen');
+  renderQuestion();
+}
+
+/* ══════════════════════════════════════════════
+   RENDER QUESTION
+══════════════════════════════════════════════ */
+function renderQuestion() {
+  const q    = QUESTIONS[currentQ];
+  answered   = false;
+  selectedOptions = [];
+
+  document.getElementById('q-num').textContent  = currentQ + 1;
+  document.getElementById('q-num2').textContent = currentQ + 1;
+  document.getElementById('q-total').textContent = QUESTIONS.length;
+  document.getElementById('progress-fill').style.width = ((currentQ / QUESTIONS.length) * 100) + '%';
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-text').textContent  = q.text;
+
+  const mt = document.getElementById('multi-tag');
+  mt.style.display = q.multi ? 'inline-block' : 'none';
+
+  const ctx = document.getElementById('q-context');
+  if (q.context) { ctx.textContent = q.context; ctx.classList.add('show'); }
+  else ctx.classList.remove('show');
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D','E','F'];
+  q.options.forEach((opt, i) => {
+    const el = document.createElement('div');
+    el.className = 'opt';
+    el.innerHTML = `<div class="opt-letter">${letters[i]}</div><div style="flex:1">${opt}</div><div class="opt-check"></div>`;
+    el.addEventListener('click', () => toggleOption(i, el, q.multi));
+    grid.appendChild(el);
+  });
+
+  document.getElementById('hint-panel').classList.remove('show');
+  document.getElementById('hint-panel').textContent = '';
+  const ep = document.getElementById('exp-panel');
+  ep.classList.remove('show','correct-exp','incorrect-exp');
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').style.display = '';
+  document.getElementById('btn-next').classList.remove('show');
+  document.getElementById('btn-hint').disabled = false;
+
+  // Re-animate card
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  void card.offsetHeight;
+  card.style.animation = '';
+}
+
+/* ══════════════════════════════════════════════
+   TOGGLE OPTION
+══════════════════════════════════════════════ */
+function toggleOption(i, el, multi) {
+  if (answered) return;
+  if (multi) {
+    if (selectedOptions.includes(i)) {
+      selectedOptions = selectedOptions.filter(x => x !== i);
+      el.classList.remove('selected');
+    } else {
+      selectedOptions.push(i);
+      el.classList.add('selected');
+    }
+  } else {
+    document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+    selectedOptions = [i];
+    el.classList.add('selected');
+  }
+  document.getElementById('btn-submit').disabled = selectedOptions.length === 0;
+}
+
+/* ══════════════════════════════════════════════
+   HINT
+══════════════════════════════════════════════ */
+function showHint() {
+  if (answered) return;
+  const panel = document.getElementById('hint-panel');
+  const btn = document.getElementById('btn-hint');
+  if (panel.classList.contains('show')) {
+    // Hide the hint
+    panel.classList.remove('show');
+    // Optionally clear the content or leave it – leaving it allows reopening
+  } else {
+    // Show the hint
+    panel.textContent = QUESTIONS[currentQ].hint;
+    panel.classList.add('show');
+  }
+  // Button stays enabled (unless answered) so user can toggle again
+  // (No longer disabling the button)
+}
+
+/* ══════════════════════════════════════════════
+   SUBMIT
+══════════════════════════════════════════════ */
+function submitAnswer() {
+  if (answered || selectedOptions.length === 0) return;
+  answered = true;
+
+  const q       = QUESTIONS[currentQ];
+  const correct = q.correct;
+  const isOk    = arraysMatch([...selectedOptions].sort(), [...correct].sort());
+  if (isOk) score++;
+  userAnswers.push({ qIndex: currentQ, selected: [...selectedOptions], isCorrect: isOk });
+
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (correct.includes(i)) {
+      el.classList.add('correct');
+      el.querySelector('.opt-check').textContent = '✓';
+    } else if (selectedOptions.includes(i)) {
+      el.classList.add('incorrect');
+      el.querySelector('.opt-check').textContent = '✗';
+    }
+  });
+
+  const ep = document.getElementById('exp-panel');
+  ep.classList.remove('correct-exp','incorrect-exp');
+  ep.classList.add('show', isOk ? 'correct-exp' : 'incorrect-exp');
+  document.getElementById('exp-head').textContent = isOk ? '✓ Correct!' : '✗ Not Quite';
+  document.getElementById('exp-body').textContent = q.explanation;
+  document.getElementById('btn-hint').disabled = true;
+  document.getElementById('btn-submit').style.display = 'none';
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('btn-next').classList.add('show');
+}
+
+/* ══════════════════════════════════════════════
+   NEXT QUESTION
+══════════════════════════════════════════════ */
+function nextQuestion() {
+  document.getElementById('btn-submit').style.display = '';
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) showResults();
+  else renderQuestion();
+}
+
+/* ══════════════════════════════════════════════
+   RESULTS
+══════════════════════════════════════════════ */
+function showResults() {
+  showScreen('result-screen');
+  const total = QUESTIONS.length;
+  const pct   = Math.round((score / total) * 100);
+
+  document.getElementById('player-banner').textContent = playerName;
+  document.getElementById('timestamp').textContent = 'Completed: ' + formatDateTime(new Date());
+  document.getElementById('final-score-num').textContent  = score;
+  document.getElementById('final-score-denom').textContent = '/ ' + total;
+  document.getElementById('bc-correct').textContent = score;
+  document.getElementById('bc-wrong').textContent   = total - score;
+  document.getElementById('bc-pct').textContent     = pct + '%';
+
+  setTimeout(() => {
+    const circ   = 2 * Math.PI * 68;
+    const offset = circ * (1 - score / total);
+    const arc    = document.getElementById('result-arc');
+    arc.style.transition       = 'stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)';
+    arc.style.strokeDashoffset = offset;
+  }, 250);
+
+  let title, sub, icon, certMsg;
+  if (pct >= 85) {
+    title = '🏆 Outstanding!'; sub = 'You\'re well-prepared for the WP certification exam!'; icon = '🎓';
+    certMsg = 'Excellent work! Your score suggests you\'re ready to sit the official WordPress certification. Review any missed questions and you\'ll be set.';
+  } else if (pct >= 70) {
+    title = '⭐ Great Job!'; sub = 'Solid performance — a little more review and you\'ll be exam-ready.'; icon = '📈';
+    certMsg = 'Good foundation! Focus on your incorrect answers and the areas you found challenging. One more practice round should do it.';
+  } else if (pct >= 50) {
+    title = '💪 Keep Going!'; sub = 'You know the basics — time to solidify your understanding.'; icon = '📚';
+    certMsg = 'Keep studying! Review the explanations for missed questions and revisit the core WordPress topics. Practice makes perfect.';
+  } else {
+    title = '🌱 Just Getting Started'; sub = 'Every expert was once a beginner. Review and try again!'; icon = '🔍';
+    certMsg = 'Don\'t be discouraged! Read through all the explanations carefully and try again. The key concepts will start clicking with more exposure.';
+  }
+
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent   = sub;
+  document.getElementById('cert-bar').innerHTML =
+    `<div class="cert-icon">${icon}</div><div><h4>Certification Readiness</h4><p>${certMsg}</p></div>`;
+
+  // Review items
+  const revEl  = document.getElementById('review-items');
+  revEl.innerHTML = '';
+  const letters = ['A','B','C','D','E','F'];
+  userAnswers.forEach((ua, idx) => {
+    const q  = QUESTIONS[ua.qIndex];
+    const sl = ua.selected.map(i => letters[i]).join(', ');
+    const cl = q.correct.map(i => letters[i]).join(', ');
+    const el = document.createElement('div');
+    el.className = 'ri';
+    el.innerHTML = `
+      <div class="ri-dot ${ua.isCorrect ? 'right' : 'wrong'}"></div>
+      <div class="ri-q">
+        <strong>Q${idx+1}:</strong> ${q.text.slice(0,85)}${q.text.length > 85 ? '…' : ''}
+        ${!ua.isCorrect ? `<br><span class="ri-correct-ans">✓ Correct: ${cl}</span>` : ''}
+      </div>
+      <div class="ri-ans">Yours: ${sl}</div>
+    `;
+    revEl.appendChild(el);
+  });
+
+  if (pct >= 80) launchConfetti();
+}
+
+function toggleReview() {
+  const sec = document.getElementById('review-section');
+  const visible = sec.style.display !== 'none';
+  sec.style.display = visible ? 'none' : 'block';
+  document.querySelector('.btn-review-toggle').textContent = visible ? '📋 Review Answers' : '▲ Hide Review';
+}
+
+/* ══════════════════════════════════════════════
+   RESTART
+══════════════════════════════════════════════ */
+function restartQuiz() {
+  document.getElementById('result-arc').style.transition      = 'none';
+  document.getElementById('result-arc').style.strokeDashoffset = 427;
+  document.getElementById('review-section').style.display = 'none';
+  document.querySelector('.btn-review-toggle').textContent = '📋 Review Answers';
+  showScreen('welcome-screen');
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN SWITCHER
+══════════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+══════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (document.getElementById('custom-panel').classList.contains('open')) return;
+
+  // Handle intro dismissal first (intro is separate from .screen elements)
+  const intro = document.getElementById('intro-screen');
+  if (intro && !intro.classList.contains('exit') && intro.style.display !== 'none') {
+    // Allow typing in the name field without triggering intro dismiss
+    if (e.target && e.target.id === 'intro-player-name') {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        dismissIntro();
+      }
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      dismissIntro();
+      return;
+    }
+  }
+
+  const active = document.querySelector('.screen.active');
+  if (!active) return;
+
+  if (active.id === 'quiz-screen') {
+    const opts = document.querySelectorAll('.opt');
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= opts.length && !answered) {
+      const q = QUESTIONS[currentQ];
+      toggleOption(num - 1, opts[num - 1], q.multi);
+    }
+    if (e.key === 'h' || e.key === 'H') showHint();
+    if (e.key === 'Enter') {
+      if (!answered && selectedOptions.length > 0) submitAnswer();
+      else if (answered) nextQuestion();
+    }
+  }
+});
+
+/* ══════════════════════════════════════════════
+   INTRO
+══════════════════════════════════════════════ */
+function dismissIntro() {
+  const nameInput = document.getElementById('intro-player-name');
+  const nameError = document.getElementById('intro-name-error');
+  const name = nameInput.value.trim();
+
+  if (!name) {
+    nameError.classList.add('show');
+    nameInput.focus();
+    nameInput.classList.add('shake');
+    setTimeout(() => nameInput.classList.remove('shake'), 500);
+    return;
+  }
+  nameError.classList.remove('show');
+  playerName = name;
+
+  // Personalize the welcome screen before transitioning
+  const greetings = ['Welcome,', 'Hey there,', 'Hello,', 'Good to see you,'];
+  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+  document.getElementById('welcome-heading').innerHTML =
+    `${greeting}<br><span style="color:var(--accent)">${playerName}</span> 👋`;
+  document.getElementById('welcome-sub').textContent =
+    `Great to have you here, ${playerName}! Challenge yourself with this interactive WordPress quiz. Each session is uniquely shuffled — hints and detailed explanations are included for every question.`;
+
+  const intro = document.getElementById('intro-screen');
+  intro.classList.add('exit');
+  setTimeout(() => {
+    intro.style.display = 'none';
+    showScreen('welcome-screen');
+    initWelcome();
+  }, 720);
+}
+
+// Spawn floating WP particles
+(function spawnParticles() {
+  const container = document.getElementById('wp-particles');
+  const icons = ['⚙','📝','🔌','🎨','📦','🔐','🗂','📐','⚡','🌐'];
+  for (let i = 0; i < 14; i++) {
+    const el = document.createElement('div');
+    el.className = 'wp-particle';
+    el.textContent = icons[Math.floor(Math.random() * icons.length)];
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      bottom:${-10 - Math.random()*20}px;
+      animation-duration:${6 + Math.random()*8}s;
+      animation-delay:${Math.random()*8}s;
+      font-size:${0.8 + Math.random()*0.8}rem;
+    `;
+    container.appendChild(el);
+  }
+})();
+
+/* ══════════════════════════════════════════════
+   CONFETTI
+══════════════════════════════════════════════ */
+function launchConfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+  const colors = ['#e8b84b','#f5d280','#3ecf7a','#5b9cf6','#b06ef3','#fb7185','#fff','#22d3ee','#fb923c'];
+  for (let i = 0; i < 100; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size  = Math.random() * 10 + 5;
+    const shape = Math.random();
+    let borderRadius;
+    if (shape > .66)      borderRadius = '50%';
+    else if (shape > .33) borderRadius = '2px';
+    else                  borderRadius = `${Math.random()*5+1}px / ${Math.random()*3+1}px`;
+    piece.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size * (shape > .5 ? 1 : .5)}px;
+      background:${color}; border-radius:${borderRadius};
+      animation-duration:${1.5 + Math.random()*2}s;
+      animation-delay:${Math.random()*.8}s;
+      transform:rotate(${Math.random()*360}deg);
+    `;
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = '', 5000);
+}
+
+/* ══════════════════════════════════════════════
+   CUSTOMIZATION PANEL
+══════════════════════════════════════════════ */
+const ACCENT_MAP = {
+  gold:   { a:'#e8b84b', d:'#b08535', l:'#f5d280', g:'rgba(232,184,75,.2)', bg:'rgba(232,184,75,.08)', b:'rgba(232,184,75,.3)' },
+  blue:   { a:'#5b9cf6', d:'#2563eb', l:'#93c5fd', g:'rgba(91,156,246,.2)', bg:'rgba(91,156,246,.08)', b:'rgba(91,156,246,.3)' },
+  purple: { a:'#b06ef3', d:'#8045cc', l:'#d0a0ff', g:'rgba(176,110,243,.2)', bg:'rgba(176,110,243,.08)', b:'rgba(176,110,243,.3)' },
+  cyan:   { a:'#22d3ee', d:'#0891b2', l:'#7de8f5', g:'rgba(34,211,238,.2)', bg:'rgba(34,211,238,.08)', b:'rgba(34,211,238,.3)' },
+  green:  { a:'#4ade80', d:'#16a34a', l:'#86efac', g:'rgba(74,222,128,.2)', bg:'rgba(74,222,128,.08)', b:'rgba(74,222,128,.3)' },
+  rose:   { a:'#fb7185', d:'#e11d48', l:'#fda4af', g:'rgba(251,113,133,.2)', bg:'rgba(251,113,133,.08)', b:'rgba(251,113,133,.3)' },
+  orange: { a:'#fb923c', d:'#ea580c', l:'#fdba74', g:'rgba(251,146,60,.2)', bg:'rgba(251,146,60,.08)', b:'rgba(251,146,60,.3)' },
+  teal:   { a:'#2dd4bf', d:'#0d9488', l:'#99f6e4', g:'rgba(45,212,191,.2)', bg:'rgba(45,212,191,.08)', b:'rgba(45,212,191,.3)' },
+  indigo: { a:'#818cf8', d:'#4f46e5', l:'#c7d2fe', g:'rgba(129,140,248,.2)', bg:'rgba(129,140,248,.08)', b:'rgba(129,140,248,.3)' },
+  yellow: { a:'#facc15', d:'#ca8a04', l:'#fef08a', g:'rgba(250,204,21,.2)', bg:'rgba(250,204,21,.08)', b:'rgba(250,204,21,.3)' },
+  pink:   { a:'#e879f9', d:'#a21caf', l:'#f5d0fe', g:'rgba(232,121,249,.2)', bg:'rgba(232,121,249,.08)', b:'rgba(232,121,249,.3)' },
+  lime:   { a:'#a3e635', d:'#65a30d', l:'#d9f99d', g:'rgba(163,230,53,.2)', bg:'rgba(163,230,53,.08)', b:'rgba(163,230,53,.3)' },
+};
+
+function applyAccent(key) {
+  const m = ACCENT_MAP[key];
+  if (!m) return;
+  const r = document.documentElement.style;
+  r.setProperty('--accent',      m.a);
+  r.setProperty('--accent-dark', m.d);
+  r.setProperty('--accent-light',m.l);
+  r.setProperty('--accent-glow', m.g);
+  r.setProperty('--accent-bg',   m.bg);
+  r.setProperty('--accent-bdr',  m.b);
+  document.querySelectorAll('.accent-swatch').forEach(s => s.classList.toggle('active', s.dataset.accent === key));
+  savePrefs();
+}
+
+let currentBg   = 'bg-mesh';
+let currentAnim = '';
+
+function openPanel() {
+  document.getElementById('custom-panel').classList.add('open');
+  document.getElementById('panel-overlay').classList.add('show');
+}
+function closePanel() {
+  document.getElementById('custom-panel').classList.remove('open');
+  document.getElementById('panel-overlay').classList.remove('show');
+}
+
+document.getElementById('gear-btn').addEventListener('click', openPanel);
+document.getElementById('btn-close-panel').addEventListener('click', closePanel);
+document.getElementById('panel-overlay').addEventListener('click', closePanel);
+
+// Theme
+document.querySelectorAll('.theme-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.documentElement.setAttribute('data-theme', card.dataset.themeId);
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    // reset inline accent overrides to let theme handle them
+    document.documentElement.style.removeProperty('--accent');
+    document.documentElement.style.removeProperty('--accent-dark');
+    document.documentElement.style.removeProperty('--accent-light');
+    document.documentElement.style.removeProperty('--accent-glow');
+    document.documentElement.style.removeProperty('--accent-bg');
+    document.documentElement.style.removeProperty('--accent-bdr');
+    document.querySelectorAll('.accent-swatch').forEach(s => s.classList.remove('active'));
+    savePrefs();
+  });
+});
+
+// Accent swatches
+document.querySelectorAll('.accent-swatch').forEach(s => {
+  s.addEventListener('click', () => applyAccent(s.dataset.accent));
+});
+
+// Font
+document.querySelectorAll('.font-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.documentElement.setAttribute('data-font', btn.dataset.fontId);
+    document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    savePrefs();
+  });
+});
+
+// Card style
+document.querySelectorAll('[data-card-id]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.documentElement.setAttribute('data-card', btn.dataset.cardId);
+    document.querySelectorAll('[data-card-id]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    savePrefs();
+  });
+});
+
+// Background
+document.querySelectorAll('[data-bg-id]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.body.classList.remove('bg-mesh','bg-grid','bg-dots');
+    if (btn.dataset.bgId) document.body.classList.add(btn.dataset.bgId);
+    currentBg = btn.dataset.bgId;
+    document.querySelectorAll('[data-bg-id]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    savePrefs();
+  });
+});
+
+// Animations
+document.querySelectorAll('[data-anim-id]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.body.classList.remove('anim-off','anim-slow','anim-fast');
+    if (btn.dataset.animId) document.body.classList.add(btn.dataset.animId);
+    currentAnim = btn.dataset.animId;
+    document.querySelectorAll('[data-anim-id]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    savePrefs();
+  });
+});
+
+// Text size
+document.querySelectorAll('[data-size-id]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.documentElement.setAttribute('data-size', btn.dataset.sizeId);
+    document.querySelectorAll('[data-size-id]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    savePrefs();
+  });
+});
+
+// Reset
+document.getElementById('btn-reset-prefs').addEventListener('click', () => {
+  localStorage.removeItem('wpquiz_prefs');
+  location.reload();
+});
+
+/* ══════════════════════════════════════════════
+   PREFERENCES (localStorage)
+══════════════════════════════════════════════ */
+function savePrefs() {
+  try {
+    const p = {
+      theme:  document.documentElement.getAttribute('data-theme'),
+      font:   document.documentElement.getAttribute('data-font'),
+      card:   document.documentElement.getAttribute('data-card'),
+      size:   document.documentElement.getAttribute('data-size'),
+      bg:     currentBg,
+      anim:   currentAnim,
+    };
+    localStorage.setItem('wpquiz_prefs', JSON.stringify(p));
+  } catch(e) {}
+}
+
+function loadPrefs() {
+  try {
+    const raw = localStorage.getItem('wpquiz_prefs');
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (p.theme) {
+      document.documentElement.setAttribute('data-theme', p.theme);
+      document.querySelectorAll('.theme-card').forEach(c =>
+        c.classList.toggle('active', c.dataset.themeId === p.theme));
+    }
+    if (p.font) {
+      document.documentElement.setAttribute('data-font', p.font);
+      document.querySelectorAll('.font-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.fontId === p.font));
+    }
+    if (p.card) {
+      document.documentElement.setAttribute('data-card', p.card);
+      document.querySelectorAll('[data-card-id]').forEach(b =>
+        b.classList.toggle('active', b.dataset.cardId === p.card));
+    }
+    if (p.size) {
+      document.documentElement.setAttribute('data-size', p.size);
+      document.querySelectorAll('[data-size-id]').forEach(b =>
+        b.classList.toggle('active', b.dataset.sizeId === p.size));
+    }
+    if (p.bg) {
+      document.body.classList.remove('bg-mesh','bg-grid','bg-dots');
+      if (p.bg) document.body.classList.add(p.bg);
+      currentBg = p.bg;
+      document.querySelectorAll('[data-bg-id]').forEach(b =>
+        b.classList.toggle('active', b.dataset.bgId === p.bg));
+    }
+    if (p.anim !== undefined) {
+      document.body.classList.remove('anim-off','anim-slow','anim-fast');
+      if (p.anim) document.body.classList.add(p.anim);
+      currentAnim = p.anim;
+      document.querySelectorAll('[data-anim-id]').forEach(b =>
+        b.classList.toggle('active', b.dataset.animId === p.anim));
+    }
+  } catch(e) {}
+}
+
+// ── INIT ──
+loadPrefs();
+// Don't show app content until intro is dismissed
+</script>
+</body>
+</html>
